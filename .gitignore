@@ -5,10 +5,10 @@
 #frontend
 **/.next/
 **/next-env.d.ts
-**/.yarn/*
-**/!.yarn/patches
-**/!.yarn/releases
-**/!.yarn/plugins
-**/!.yarn/sdks
-**/!.yarn/versions
 **/.pnp.*
+**/.yarn/*
+!**/.yarn/patches
+!**/.yarn/releases
+!**/.yarn/plugins
+!**/.yarn/sdks
+!**/.yarn/versions

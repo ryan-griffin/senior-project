@@ -1070,22 +1070,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"frontend@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "frontend@workspace:."
-  dependencies:
-    "@types/node": 18.7.14
-    "@types/react": 18.0.18
-    "@types/react-dom": 18.0.6
-    eslint: 8.23.0
-    eslint-config-next: 12.2.5
-    next: 12.2.5
-    react: 18.2.0
-    react-dom: 18.2.0
-    typescript: ^4.8.2
-  languageName: unknown
-  linkType: soft
-
 "fs.realpath@npm:^1.0.0":
   version: 1.0.0
   resolution: "fs.realpath@npm:1.0.0"
@@ -2098,6 +2082,22 @@ __metadata:
   checksum: 2fa3e877568cd6ce769c75c211beaed1f9fce80b28338cadd9d0b6c40f2e2862bafd62c19a6cff42f3d54292b7c623277bcab8816a2b5521cf15210d43e75232
   languageName: node
   linkType: hard
+
+"senior-project@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "senior-project@workspace:."
+  dependencies:
+    "@types/node": 18.7.14
+    "@types/react": 18.0.18
+    "@types/react-dom": 18.0.6
+    eslint: 8.23.0
+    eslint-config-next: 12.2.5
+    next: 12.2.5
+    react: 18.2.0
+    react-dom: 18.2.0
+    typescript: ^4.8.2
+  languageName: unknown
+  linkType: soft
 
 "shebang-command@npm:^2.0.0":
   version: 2.0.0
