@@ -1,23 +1,26 @@
 use actix_web::{web, App, HttpResponse, HttpServer};
 use diesel::prelude::*;
-use senior_project::models::*;
+use models::*;
+use schema::posts::dsl::*;
 use senior_project::*;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    use self::schema::posts::dsl::*;
-
     let connection = &mut establish_connection();
-    let results = posts
-        .limit(5)
-        .load::<Post>(connection)
-        .expect("Error loading posts");
 
-    println!("Displaying {} posts", results.len());
+    let title_str = "This is a title";
+    let body_str = "This is a body";
+    let date_str = "This is a date";
+
+    create_post(connection, title_str, body_str, date_str);
+
+    let results = posts.load::<Post>(connection).expect("Error loading posts");
+
     for post in results {
+        println!("{}", post.id);
         println!("{}", post.title);
-        println!("-----------\n");
         println!("{}", post.body);
+        println!("{}\n", post.date);
     }
 
     HttpServer::new(|| {

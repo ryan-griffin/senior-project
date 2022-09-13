@@ -5,6 +5,6 @@ diesel::table! {
         id -> Integer,
         title -> Varchar,
         body -> Text,
-        date -> Text,
+        date -> Varchar,
     }
 }
