@@ -35,7 +35,7 @@ pub fn delete_post(connection: &mut MysqlConnection, post_id: i32) {
 
     diesel::delete(posts.filter(id.eq(post_id)))
         .execute(connection)
-        .expect("Error deleting posts");
+        .expect("Error deleting post");
 }
 
 pub fn get_posts(connection: &mut MysqlConnection) {

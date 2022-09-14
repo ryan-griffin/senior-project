@@ -11,16 +11,15 @@ fn input() -> String {
 async fn main() -> std::io::Result<()> {
     let connection = &mut establish_connection();
 
-    let title = "This is a title";
-    let body = "This is a body";
-    let date = "This is a date";
-
     get_posts(connection);
 
     loop {
         let prompt = input();
         if prompt == "create" {
-            create_post(connection, title, body, date);
+            let title = input();
+            let body = input();
+            let date = input();
+            create_post(connection, &title, &body, &date);
             get_posts(connection)
         } else if prompt == "delete" {
             delete_post(connection, input().parse::<i32>().unwrap());
