@@ -1,5 +1,7 @@
-// use actix_web::{web, App, HttpResponse, HttpServer};
+use actix_web::{get, web, App, HttpServer, Responder, Result};
+use models::Post;
 use senior_project::*;
+use serde::Serialize;
 
 fn input() -> String {
     let mut x: String = String::new();
@@ -7,33 +9,43 @@ fn input() -> String {
     x.trim().to_string()
 }
 
+#[get("/a/{name}")]
+async fn response() -> Result<impl Responder> {
+    #[derive(Serialize)]
+    struct Posts {
+        posts: Vec<Post>,
+    }
+
+    Ok(web::Json(Posts { posts: get_posts() }))
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let connection = &mut establish_connection();
-
-    get_posts(connection);
-
-    loop {
-        let prompt = input();
-        if prompt == "create" {
-            let title = input();
-            let body = input();
-            let date = input();
-            create_post(connection, &title, &body, &date);
-            get_posts(connection)
-        } else if prompt == "delete" {
-            delete_post(connection, input().parse::<i32>().unwrap());
-            get_posts(connection)
+    fn print_posts() {
+        for post in get_posts() {
+            println!("{}", post.id);
+            println!("{}", post.title);
+            println!("{} ", post.body);
+            println!("{}\n ", post.date);
         }
     }
 
-    // HttpServer::new(|| {
-    //     App::new().route(
-    //         "/",
-    //         web::get().to(|| async { HttpResponse::Ok().body("Hello World!") }),
-    //     )
-    // })
-    // .bind(("127.0.0.1", 8080))?
-    // .run()
-    // .await
+    print_posts();
+
+    let prompt = input();
+    if prompt == "create" {
+        let title = input();
+        let body = input();
+        let date = input();
+        create_post(&title, &body, &date);
+        print_posts();
+    } else if prompt == "delete" {
+        delete_post(input().parse::<i32>().unwrap());
+        print_posts();
+    }
+
+    HttpServer::new(|| App::new().service(response))
+        .bind(("127.0.0.1", 8080))?
+        .run()
+        .await
 }
