@@ -33,7 +33,7 @@ pub fn create_post(connection: &mut MysqlConnection, title: &str, body: &str, da
 pub fn delete_post(connection: &mut MysqlConnection, post_id: i32) {
     use schema::posts::dsl::*;
 
-    let deleted = diesel::delete(posts.filter(id.eq(post_id)))
+    diesel::delete(posts.filter(id.eq(post_id)))
         .execute(connection)
         .expect("Error deleting posts");
 }
