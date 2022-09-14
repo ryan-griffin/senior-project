@@ -1,7 +1,5 @@
 use actix_web::{get, web, App, HttpServer, Responder, Result};
-use models::Post;
 use senior_project::*;
-use serde::Serialize;
 
 fn input() -> String {
     let mut x: String = String::new();
@@ -9,14 +7,9 @@ fn input() -> String {
     x.trim().to_string()
 }
 
-#[get("/a/{name}")]
+#[get("/")]
 async fn response() -> Result<impl Responder> {
-    #[derive(Serialize)]
-    struct Posts {
-        posts: Vec<Post>,
-    }
-
-    Ok(web::Json(Posts { posts: get_posts() }))
+    Ok(web::Json(get_posts()))
 }
 
 #[actix_web::main]
