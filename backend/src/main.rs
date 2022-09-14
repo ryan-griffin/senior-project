@@ -1,35 +1,40 @@
-use actix_web::{web, App, HttpResponse, HttpServer};
-use diesel::prelude::*;
-use models::*;
-use schema::posts::dsl::*;
+// use actix_web::{web, App, HttpResponse, HttpServer};
 use senior_project::*;
+
+fn input() -> String {
+    let mut x: String = String::new();
+    std::io::stdin().read_line(&mut x).unwrap();
+    x.trim().to_string()
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let connection = &mut establish_connection();
 
-    let title_str = "This is a title";
-    let body_str = "This is a body";
-    let date_str = "This is a date";
+    let title = "This is a title";
+    let body = "This is a body";
+    let date = "This is a date";
 
-    create_post(connection, title_str, body_str, date_str);
+    get_posts(connection);
 
-    let results = posts.load::<Post>(connection).expect("Error loading posts");
-
-    for post in results {
-        println!("{}", post.id);
-        println!("{}", post.title);
-        println!("{}", post.body);
-        println!("{}\n", post.date);
+    loop {
+        let prompt = input();
+        if prompt == "create" {
+            create_post(connection, title, body, date);
+            get_posts(connection)
+        } else if prompt == "delete" {
+            delete_post(connection, input().parse::<i32>().unwrap());
+            get_posts(connection)
+        }
     }
 
-    HttpServer::new(|| {
-        App::new().route(
-            "/",
-            web::get().to(|| async { HttpResponse::Ok().body("Hello World!") }),
-        )
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
+    // HttpServer::new(|| {
+    //     App::new().route(
+    //         "/",
+    //         web::get().to(|| async { HttpResponse::Ok().body("Hello World!") }),
+    //     )
+    // })
+    // .bind(("127.0.0.1", 8080))?
+    // .run()
+    // .await
 }
