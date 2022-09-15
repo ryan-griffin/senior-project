@@ -19,7 +19,7 @@ async fn main() -> std::io::Result<()> {
             println!("{}", post.id);
             println!("{}", post.title);
             println!("{} ", post.body);
-            println!("{}\n ", post.date);
+            println!("{}\n ", post.datetime);
         }
     }
 
@@ -29,8 +29,7 @@ async fn main() -> std::io::Result<()> {
     if prompt == "create" {
         let title = input();
         let body = input();
-        let date = input();
-        create_post(&title, &body, &date);
+        create_post(&title, &body);
         print_posts();
     } else if prompt == "delete" {
         delete_post(input().parse::<i32>().unwrap());

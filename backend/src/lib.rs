@@ -14,12 +14,12 @@ fn establish_connection() -> MysqlConnection {
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-pub fn create_post(title: &str, body: &str, date: &str) -> Post {
+pub fn create_post(title: &str, body: &str) -> Post {
     use crate::schema::posts;
 
     let connection = &mut establish_connection();
 
-    let new_post = NewPost { title, body, date };
+    let new_post = NewPost { title, body };
 
     diesel::insert_into(posts::table)
         .values(&new_post)

@@ -16,7 +16,7 @@ interface Props {
 const index: NextPage<Props> = ({ posts }) => {
     const postList = posts.map((post) => <Post key={post.id} post={post} />);
 
-    return <div className=" m-10 flex flex-col gap-10">{postList}</div>;
+    return <div className="m-10 flex flex-col gap-10">{postList}</div>;
 };
 
 export default index;

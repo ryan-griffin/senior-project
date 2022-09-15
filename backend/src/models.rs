@@ -1,14 +1,14 @@
 use crate::schema::posts;
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::Serialize;
 
 #[derive(Queryable, Serialize)]
-
 pub struct Post {
     pub id: i32,
     pub title: String,
     pub body: String,
-    pub date: String,
+    pub datetime: NaiveDateTime,
 }
 
 #[derive(Insertable)]
@@ -16,5 +16,4 @@ pub struct Post {
 pub struct NewPost<'a> {
     pub title: &'a str,
     pub body: &'a str,
-    pub date: &'a str,
 }
