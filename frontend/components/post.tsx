@@ -6,13 +6,13 @@ const Post: FC<Props> = ({ post }) => {
             <div className="text-xl">Id: {post.id}</div>
             <div className="text-xl">Title: {post.title}</div>
             <div className="text-xl">body: {post.body}</div>
-            <div className="text-xl">Date: {post.date}</div>
+            <div className="text-xl">Date: {post.datetime}</div>
         </div>
     );
 };
 
 interface Props {
-    post: { id: number; title: String; body: String; date: String };
+    post: { id: number; title: String; body: String; datetime: String };
 }
 
 export default Post;

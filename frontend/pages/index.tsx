@@ -10,7 +10,7 @@ export async function getServerSideProps() {
 }
 
 interface Props {
-    posts: { id: number; title: String; body: String; date: String }[];
+    posts: { id: number; title: String; body: String; datetime: String }[];
 }
 
 const index: NextPage<Props> = ({ posts }) => {
