@@ -5,10 +5,10 @@ const CreatePost: FC = () => {
     const [body, setBody] = useState("");
 
     function createPost(event: any) {
-        console.log(title);
-        console.log(body);
-        setTitle("");
-        setBody("");
+        fetch("http://localhost:8080/create-post", {
+            method: "POST",
+            body: JSON.stringify({ title, body }),
+        });
         event.preventDefault();
     }
 

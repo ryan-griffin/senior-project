@@ -3,7 +3,7 @@ import Post from "../components/post";
 import CreatePost from "../components/CreatePost";
 
 export async function getServerSideProps() {
-    const res = await fetch("http://127.0.0.1:8080");
+    const res = await fetch("http://127.0.0.1:8080/posts");
     const posts = await res.json();
     return {
         props: { posts },
