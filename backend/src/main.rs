@@ -1,5 +1,5 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-use models::Post;
+use actix_web::{web, App, HttpServer, Responder, Result};
+use models::NewPost;
 use senior_project::*;
 
 // fn input() -> String {
@@ -12,9 +12,9 @@ async fn fetch_posts() -> impl Responder {
     web::Json(get_posts())
 }
 
-async fn fetch_create_post(post: web::Json<Post>) -> impl Responder {
+async fn fetch_create_post(post: web::Json<NewPost>) -> Result<String> {
     create_post(&post.title, &post.body);
-    HttpResponse::Ok()
+    Ok(format!("Post created: {}", &post.title))
 }
 
 #[actix_web::main]

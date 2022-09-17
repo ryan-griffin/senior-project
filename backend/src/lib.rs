@@ -11,13 +11,16 @@ fn establish_connection() -> MysqlConnection {
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     MysqlConnection::establish(&database_url)
-        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
+        .unwrap_or_else(|_| panic!("Error connecting to {}", &database_url))
 }
 
-pub fn create_post(title: &str, body: &str) -> Post {
+pub fn create_post(title_str: &str, body_str: &str) -> Post {
     use crate::schema::posts;
 
     let connection = &mut establish_connection();
+
+    let title = title_str.to_string();
+    let body = body_str.to_string();
 
     let new_post = NewPost { title, body };
 
