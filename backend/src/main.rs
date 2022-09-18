@@ -1,4 +1,5 @@
-use actix_web::{web, App, HttpServer, Responder, Result};
+use actix_cors::Cors;
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use models::NewPost;
 use senior_project::*;
 
@@ -8,13 +9,15 @@ use senior_project::*;
 //     x.trim().to_string()
 // }
 
+#[get("/posts")]
 async fn fetch_posts() -> impl Responder {
     web::Json(get_posts())
 }
 
-async fn fetch_create_post(post: web::Json<NewPost>) -> Result<String> {
+#[post("/create-post")]
+async fn fetch_create_post(post: web::Json<NewPost>) -> impl Responder {
     create_post(&post.title, &post.body);
-    Ok(format!("Post created: {}", &post.title))
+    HttpResponse::Ok()
 }
 
 #[actix_web::main]
@@ -42,9 +45,12 @@ async fn main() -> std::io::Result<()> {
     // }
 
     HttpServer::new(|| {
+        let cors = Cors::default().allow_any_origin().send_wildcard();
+
         App::new()
-            .service(web::resource("/posts").route(web::get().to(fetch_posts)))
-            .service(web::resource("/create-post").route(web::post().to(fetch_create_post)))
+            .wrap(cors)
+            .service(fetch_posts)
+            .service(fetch_create_post)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

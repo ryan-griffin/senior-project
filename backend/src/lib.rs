@@ -15,7 +15,7 @@ fn establish_connection() -> MysqlConnection {
 }
 
 pub fn create_post(title_str: &str, body_str: &str) -> Post {
-    use crate::schema::posts;
+    use schema::posts;
 
     let connection = &mut establish_connection();
 
