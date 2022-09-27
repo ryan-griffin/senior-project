@@ -1,5 +1,5 @@
 use actix_cors::Cors;
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, post, web, App, HttpServer, Responder};
 use models::NewPost;
 use senior_project::*;
 
@@ -16,8 +16,7 @@ async fn fetch_posts() -> impl Responder {
 
 #[post("/create-post")]
 async fn fetch_create_post(post: web::Json<NewPost>) -> impl Responder {
-    create_post(&post.title, &post.body);
-    HttpResponse::Ok()
+    web::Json(create_post(&post.title, &post.body))
 }
 
 #[actix_web::main]
@@ -38,14 +37,12 @@ async fn main() -> std::io::Result<()> {
     //     let title = input();
     //     let body = input();
     //     create_post(&title, &body);
-    //     print_posts();
     // } else if prompt == "delete" {
     //     delete_post(input().parse::<i32>().unwrap());
-    //     print_posts();
     // }
 
     HttpServer::new(|| {
-        let cors = Cors::default().allow_any_origin().send_wildcard();
+        let cors = Cors::default().allowed_origin("http://localhost:3000");
 
         App::new()
             .wrap(cors)
