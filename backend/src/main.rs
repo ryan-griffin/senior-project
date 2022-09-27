@@ -1,6 +1,6 @@
 use actix_cors::Cors;
-use actix_web::{get, post, web, App, HttpServer, Responder};
-use models::NewPost;
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use models::*;
 use senior_project::*;
 
 // fn input() -> String {
@@ -17,6 +17,12 @@ async fn fetch_posts() -> impl Responder {
 #[post("/create-post")]
 async fn fetch_create_post(post: web::Json<NewPost>) -> impl Responder {
     web::Json(create_post(&post.title, &post.body))
+}
+
+#[post("/delete-post")]
+async fn fetch_delete_post(post: web::Json<Post>) -> impl Responder {
+    delete_post(post.id);
+    HttpResponse::Ok().body("Post deleted")
 }
 
 #[actix_web::main]
@@ -48,6 +54,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .service(fetch_posts)
             .service(fetch_create_post)
+            .service(fetch_delete_post)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
