@@ -1,56 +1,67 @@
-use actix_cors::Cors;
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
-use models::*;
-use senior_project::*;
+mod actions;
+mod models;
+mod schema;
 
-// fn input() -> String {
-//     let mut x: String = String::new();
-//     std::io::stdin().read_line(&mut x).unwrap();
-//     x.trim().to_string()
-// }
+use crate::actions::*;
+use actix_cors::Cors;
+use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer};
+use diesel::prelude::*;
+use diesel::r2d2::{ConnectionManager, Pool};
+use models::*;
+
+type DbPool = Pool<ConnectionManager<MysqlConnection>>;
 
 #[get("/posts")]
-async fn fetch_posts() -> impl Responder {
-    web::Json(get_posts())
+async fn fetch_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
+    let posts = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        get_posts(&mut connection)
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(posts))
 }
 
 #[post("/create-post")]
-async fn fetch_create_post(post: web::Json<NewPost>) -> impl Responder {
-    web::Json(create_post(&post.title, &post.body))
+async fn fetch_create_post(
+    pool: web::Data<DbPool>,
+    post: web::Json<NewPost>,
+) -> Result<HttpResponse, Error> {
+    let post = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        create_post(&mut connection, &post.title, &post.body)
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(post))
 }
 
 #[post("/delete-post")]
-async fn fetch_delete_post(post: web::Json<Post>) -> impl Responder {
-    delete_post(post.id);
-    HttpResponse::Ok().body("Post deleted")
+async fn fetch_delete_post(
+    pool: web::Data<DbPool>,
+    post: web::Json<Post>,
+) -> Result<HttpResponse, Error> {
+    web::block(move || {
+        let mut connection = pool.get().unwrap();
+        delete_post(&mut connection, post.id);
+    })
+    .await?;
+    Ok(HttpResponse::Ok().body("Post deleted"))
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // fn print_posts() {
-    //     for post in get_posts() {
-    //         println!("{}", post.id);
-    //         println!("{}", post.title);
-    //         println!("{} ", post.body);
-    //         println!("{}\n ", post.datetime);
-    //     }
-    // }
+    dotenv::dotenv().ok();
 
-    // print_posts();
+    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let manager = ConnectionManager::<MysqlConnection>::new(database_url);
+    let pool = Pool::builder()
+        .build(manager)
+        .expect("Failed to create pool.");
 
-    // let prompt = input();
-    // if prompt == "create" {
-    //     let title = input();
-    //     let body = input();
-    //     create_post(&title, &body);
-    // } else if prompt == "delete" {
-    //     delete_post(input().parse::<i32>().unwrap());
-    // }
-
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         let cors = Cors::default().allowed_origin("http://localhost:3000");
 
         App::new()
+            .app_data(web::Data::new(pool.clone()))
             .wrap(cors)
             .service(fetch_posts)
             .service(fetch_create_post)
