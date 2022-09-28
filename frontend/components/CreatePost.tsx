@@ -4,14 +4,13 @@ const CreatePost: FC = () => {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
 
-    async function createPost(event: any) {
-        event.preventDefault();
+    async function createPost() {
         const res = await fetch("http://localhost:8080/create-post", {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ title, body }),
         });
         const post: post = await res.json();
-        console.log(post.id);
     }
 
     interface post {

@@ -2,7 +2,7 @@ mod actions;
 mod models;
 mod schema;
 
-use crate::actions::*;
+use actions::*;
 use actix_cors::Cors;
 use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer};
 use diesel::prelude::*;
@@ -58,7 +58,10 @@ async fn main() -> std::io::Result<()> {
         .expect("Failed to create pool.");
 
     HttpServer::new(move || {
-        let cors = Cors::default().allowed_origin("http://localhost:3000");
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allow_any_header()
+            .allow_any_method();
 
         App::new()
             .app_data(web::Data::new(pool.clone()))
