@@ -1,7 +1,11 @@
 import { useRouter } from "next/router";
 import { FC, useState } from "react";
 
-const CreatePost: FC = () => {
+interface Props {
+    state: string;
+}
+
+const CreatePost: FC<Props> = ({ state }) => {
     const router = useRouter();
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
@@ -24,10 +28,14 @@ const CreatePost: FC = () => {
         datetime: string;
     }
 
-    const inputClass: string = "border-2 border-black hover:outline-none";
+    const inputClass: string =
+        "bg-gray-200 rounded-md outline-none p-2 focus:bg-gray-300";
 
     return (
-        <form className="flex flex-col gap-5 w-56" onSubmit={createPost}>
+        <form
+            className={`flex flex-col w-[650px] p-4 gap-4 fixed z-0 left-1/2 -translate-x-1/2 bg-white rounded-lg drop-shadow-md  duration-[250ms] ${state}`}
+            onSubmit={createPost}
+        >
             <input
                 className={inputClass}
                 type="text"
@@ -47,7 +55,11 @@ const CreatePost: FC = () => {
                 onChange={(event) => setBody(event.target.value)}
                 required
             />
-            <input className="bg-blue-500" type="submit" value="Create Post" />
+            <input
+                className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md"
+                type="submit"
+                value="Create Post"
+            />
         </form>
     );
 };
