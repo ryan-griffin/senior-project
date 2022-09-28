@@ -18,10 +18,10 @@ const index: NextPage<Props> = ({ posts }) => {
     const postList = posts.map((post) => <Post key={post.id} post={post} />);
 
     return (
-        <>
+        <div className="p-10 flex flex-col gap-10">
             <CreatePost />
-            <div className="m-10 flex flex-col gap-10">{postList}</div>
-        </>
+            <div className="flex flex-col gap-10">{postList}</div>
+        </div>
     );
 };
 

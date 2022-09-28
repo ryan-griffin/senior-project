@@ -27,7 +27,7 @@ const CreatePost: FC = () => {
     const inputClass: string = "border-2 border-black hover:outline-none";
 
     return (
-        <form className="m-10 flex flex-col gap-5 w-56" onSubmit={createPost}>
+        <form className="flex flex-col gap-5 w-56" onSubmit={createPost}>
             <input
                 className={inputClass}
                 type="text"
