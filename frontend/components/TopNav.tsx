@@ -6,12 +6,16 @@ import CreatePost from "./CreatePost";
 import ContextMenu from "./ContextMenu";
 
 const TopNav: FC = () => {
-    const buttonClass: string = "h-10 w-10 p-1 rounded-md hover:bg-gray-200";
+    const buttonClass =
+        "h-10 w-10 p-1 rounded-md hover:bg-gray-200 duration-100";
     const iconSize: number = 32;
 
     type state = "hidden" | "shown";
     const [createPostState, setCreatePostState] = useState<state>("hidden");
-    const [contextMenuState, setContextMenuState] = useState<state>("hidden");
+    const [createContextMenuState, setCreateContextMenuState] =
+        useState<state>("hidden");
+    const [userContextMenuState, setUserContextMenuState] =
+        useState<state>("hidden");
 
     return (
         <>
@@ -24,6 +28,7 @@ const TopNav: FC = () => {
                         width={39}
                     />
                 </div>
+
                 <Link href="/">
                     <a className={buttonClass}>
                         <Image
@@ -54,19 +59,17 @@ const TopNav: FC = () => {
                         />
                     </a>
                 </Link>
+
                 <input
                     className="bg-gray-200 rounded-md outline-none p-1 w-[500px] focus:bg-gray-300"
                     type="text"
                     placeholder="Search"
                 />
-                <div className="flex h-10">
+
+                <div className="flex h-10 cursor-pointer">
                     <div
-                        className="p-1 rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300"
-                        onClick={() => {
-                            createPostState == "hidden"
-                                ? setCreatePostState("shown")
-                                : setCreatePostState("hidden");
-                        }}
+                        className="p-1 rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300 duration-100"
+                        onClick={() => setCreatePostState("shown")}
                     >
                         <Image
                             src="/icons/plus.svg"
@@ -76,11 +79,11 @@ const TopNav: FC = () => {
                         />
                     </div>
                     <div
-                        className="p-1 rounded-r-md hover:bg-gray-200"
+                        className="p-1 rounded-r-md hover:bg-gray-200 duration-100"
                         onClick={() => {
-                            contextMenuState == "hidden"
-                                ? setContextMenuState("shown")
-                                : setContextMenuState("hidden");
+                            createContextMenuState == "hidden"
+                                ? setCreateContextMenuState("shown")
+                                : setCreateContextMenuState("hidden");
                         }}
                     >
                         <Image
@@ -95,7 +98,7 @@ const TopNav: FC = () => {
                             {
                                 text: "New Post",
                                 icon: "test",
-                                onClick: () => console.log("hello world"),
+                                onClick: () => setCreatePostState("shown"),
                             },
                             {
                                 text: "New Community",
@@ -103,28 +106,57 @@ const TopNav: FC = () => {
                                 onClick: () => console.log("goodbye world"),
                             },
                         ]}
-                        state={contextMenuState}
+                        state={createContextMenuState}
+                        setState={setCreateContextMenuState}
                     />
                 </div>
-                <div className="flex gap-1 h-10 p-1 rounded-md hover:bg-gray-200 ml-auto">
-                    <div className="rounded-full bg-black">
+
+                <div
+                    className="flex ml-auto"
+                    onClick={() => {
+                        userContextMenuState == "hidden"
+                            ? setUserContextMenuState("shown")
+                            : setUserContextMenuState("hidden");
+                    }}
+                >
+                    <div className="flex h-10 p-1 gap-1 rounded-md hover:bg-gray-200 cursor-pointer duration-100">
+                        <div className="rounded-full bg-black">
+                            <Image
+                                src="/icons/user.svg"
+                                alt=""
+                                height={iconSize}
+                                width={iconSize}
+                            />
+                        </div>
+                        <div className="m-auto">Username</div>
                         <Image
-                            src="/icons/user.svg"
+                            src="/icons/down_arrow.svg"
                             alt=""
                             height={iconSize}
                             width={iconSize}
                         />
                     </div>
-                    <div className="m-auto">Username</div>
-                    <Image
-                        src="/icons/down_arrow.svg"
-                        alt=""
-                        height={iconSize}
-                        width={iconSize}
+                    <ContextMenu
+                        items={[
+                            {
+                                text: "Profile",
+                                onClick: () => console.log("Profile"),
+                            },
+                            {
+                                text: "Settings",
+                                onClick: () => console.log("Settings"),
+                            },
+                            {
+                                text: "Logout",
+                                onClick: () => console.log("Logout"),
+                            },
+                        ]}
+                        state={userContextMenuState}
+                        setState={setUserContextMenuState}
                     />
                 </div>
             </nav>
-            <CreatePost state={createPostState} />
+            <CreatePost state={createPostState} setState={setCreatePostState} />
         </>
     );
 };

@@ -3,23 +3,27 @@ import { FC } from "react";
 interface Props {
     items: { text: string; icon?: string; onClick: () => void }[];
     state: "hidden" | "shown";
+    setState: (state: "hidden" | "shown") => void;
 }
 
-const ContextMenu: FC<Props> = ({ items, state }) => {
+const ContextMenu: FC<Props> = ({ items, state, setState }) => {
     const menuItems = items.map((item, key) => (
         <div
-            className="p-2 rounded-md hover:bg-gray-200 cursor-pointer"
+            className="p-2 rounded-md hover:bg-gray-200 duration-100 cursor-pointer"
             key={key}
-            onClick={item.onClick}
+            onClick={() => {
+                item.onClick();
+                setState("hidden");
+            }}
         >
             {item.text}
         </div>
     ));
 
     let height = 8;
-    for (const _ in items) {
+    items.forEach(() => {
         height += 40;
-    }
+    });
 
     const stateClass = state == "hidden" ? "max-h-0" : `max-h-[${height}px]`;
 

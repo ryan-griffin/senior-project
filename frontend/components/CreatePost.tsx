@@ -4,9 +4,10 @@ import Button from "./Button";
 
 interface Props {
     state: "hidden" | "shown";
+    setState: (state: "hidden" | "shown") => void;
 }
 
-const CreatePost: FC<Props> = ({ state }) => {
+const CreatePost: FC<Props> = ({ state, setState }) => {
     const router = useRouter();
 
     const [title, setTitle] = useState("");
@@ -62,7 +63,15 @@ const CreatePost: FC<Props> = ({ state }) => {
                 onChange={(event) => setBody(event.target.value)}
                 required
             />
-            <Button text="Create Post" style="primary" />
+            <div className="flex gap-4">
+                <Button
+                    text="Cancel"
+                    type="button"
+                    style="secondary"
+                    onClick={() => setState("hidden")}
+                />
+                <Button text="Create Post" type="submit" style="primary" />
+            </div>
         </form>
     );
 };

@@ -2,22 +2,24 @@ import { FC } from "react";
 
 interface Props {
     text: string;
+    type: "button" | "submit";
     style: "primary" | "secondary";
     onClick?: () => void;
 }
 
-const Button: FC<Props> = ({ text, style, onClick }) => {
-    let buttonStyle: string;
-    style == "primary"
-        ? (buttonStyle =
-              "bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md")
-        : (buttonStyle =
-              "bg-gray-200 hover:bg-gray-300 text-black p-2 rounded-md");
+const Button: FC<Props> = ({ text, style, type, onClick }) => {
+    const buttonStyle =
+        style == "primary"
+            ? "text-white bg-blue-500 hover:bg-blue-600"
+            : "text-black bg-gray-200 hover:bg-gray-300";
 
     return (
-        <button className={buttonStyle} onClick={onClick}>
-            {text}
-        </button>
+        <input
+            className={`p-2 w-full rounded-md cursor-pointer duration-100 ${buttonStyle}`}
+            type={type}
+            value={text}
+            onClick={onClick}
+        />
     );
 };
 
