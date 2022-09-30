@@ -21,15 +21,19 @@ const ContextMenu: FC<Props> = ({ items, state, setState }) => {
     ));
 
     let height = 8;
+    let duration = 10;
     items.forEach(() => {
         height += 40;
+        duration += 50;
     });
-
-    const stateClass = state == "hidden" ? "max-h-0" : `max-h-[${height}px]`;
 
     return (
         <div
-            className={`bg-white rounded-lg shadow-lg absolute top-14 duration-[150ms] overflow-hidden ${stateClass}`}
+            className="bg-white rounded-lg shadow-md absolute top-14 overflow-hidden"
+            style={{
+                maxHeight: state == "hidden" ? "0px" : `${height}px`,
+                transitionDuration: `${duration}ms`,
+            }}
         >
             <div className="m-1 gap-1">{menuItems}</div>
         </div>
