@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Post from "../components/post";
-import CreatePost from "../components/CreatePost";
 
 export async function getServerSideProps() {
     const res = await fetch("http://localhost:8080/posts");
@@ -17,11 +16,7 @@ interface Props {
 const index: NextPage<Props> = ({ posts }) => {
     const postList = posts.map((post) => <Post key={post.id} post={post} />);
 
-    return (
-        <div className="p-10 flex flex-col gap-10">
-            <div className="flex flex-col gap-10">{postList}</div>
-        </div>
-    );
+    return <div className="flex flex-col p-4 gap-4">{postList}</div>;
 };
 
 export default index;

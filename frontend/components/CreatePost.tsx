@@ -1,14 +1,24 @@
 import { useRouter } from "next/router";
 import { FC, useState } from "react";
+import Button from "./Button";
 
 interface Props {
-    state: string;
+    state: "hidden" | "shown";
 }
 
 const CreatePost: FC<Props> = ({ state }) => {
     const router = useRouter();
+
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
+
+    const stateClass =
+        state == "hidden"
+            ? "-translate-y-[calc(100%+3.5rem)]"
+            : "translate-y-2";
+
+    const inputClass: string =
+        "bg-gray-200 rounded-md outline-none p-2 focus:bg-gray-300";
 
     async function createPost(event: any) {
         event.preventDefault();
@@ -28,12 +38,9 @@ const CreatePost: FC<Props> = ({ state }) => {
         datetime: string;
     }
 
-    const inputClass: string =
-        "bg-gray-200 rounded-md outline-none p-2 focus:bg-gray-300";
-
     return (
         <form
-            className={`flex flex-col w-[650px] p-4 gap-4 fixed z-0 left-1/2 -translate-x-1/2 bg-white rounded-lg drop-shadow-md  duration-[250ms] ${state}`}
+            className={`flex flex-col w-[650px] p-4 gap-4 fixed z-0 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-md  duration-[250ms] ${stateClass}`}
             onSubmit={createPost}
         >
             <input
@@ -55,11 +62,7 @@ const CreatePost: FC<Props> = ({ state }) => {
                 onChange={(event) => setBody(event.target.value)}
                 required
             />
-            <input
-                className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md"
-                type="submit"
-                value="Create Post"
-            />
+            <Button text="Create Post" style="primary" />
         </form>
     );
 };

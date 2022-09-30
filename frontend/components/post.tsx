@@ -6,11 +6,11 @@ interface Props {
 
 const Post: FC<Props> = ({ post }) => {
     return (
-        <div>
+        <div className="p-4 bg-white rounded-lg shadow-md w-1/2 m-auto">
             <div className="text-xl">Id: {post.id}</div>
             <div className="text-xl">Title: {post.title}</div>
-            <div className="text-xl">body: {post.body}</div>
-            <div className="text-xl">Date: {post.datetime}</div>
+            <div className="text-xl">Body: {post.body}</div>
+            <div className="text-xl">Datetime: {post.datetime}</div>
         </div>
     );
 };

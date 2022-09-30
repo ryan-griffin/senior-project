@@ -3,13 +3,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import CreatePost from "./CreatePost";
+import ContextMenu from "./ContextMenu";
 
 const TopNav: FC = () => {
     const buttonClass: string = "h-10 w-10 p-1 rounded-md hover:bg-gray-200";
     const iconSize: number = 32;
 
-    const hidden: string = "-translate-y-[calc(100%+3.5rem)]";
-    const [createPostState, setCreatePostState] = useState(hidden);
+    type state = "hidden" | "shown";
+    const [createPostState, setCreatePostState] = useState<state>("hidden");
+    const [contextMenuState, setContextMenuState] = useState<state>("hidden");
 
     return (
         <>
@@ -61,9 +63,9 @@ const TopNav: FC = () => {
                     <div
                         className="p-1 rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300"
                         onClick={() => {
-                            createPostState == hidden
-                                ? setCreatePostState("translate-y-2")
-                                : setCreatePostState(hidden);
+                            createPostState == "hidden"
+                                ? setCreatePostState("shown")
+                                : setCreatePostState("hidden");
                         }}
                     >
                         <Image
@@ -73,7 +75,14 @@ const TopNav: FC = () => {
                             width={iconSize}
                         />
                     </div>
-                    <div className="p-1 rounded-r-md hover:bg-gray-200">
+                    <div
+                        className="p-1 rounded-r-md hover:bg-gray-200"
+                        onClick={() => {
+                            contextMenuState == "hidden"
+                                ? setContextMenuState("shown")
+                                : setContextMenuState("hidden");
+                        }}
+                    >
                         <Image
                             src="/icons/down_arrow.svg"
                             alt=""
@@ -81,6 +90,21 @@ const TopNav: FC = () => {
                             width={iconSize}
                         />
                     </div>
+                    <ContextMenu
+                        items={[
+                            {
+                                text: "New Post",
+                                icon: "test",
+                                onClick: () => console.log("hello world"),
+                            },
+                            {
+                                text: "New Community",
+                                icon: "test",
+                                onClick: () => console.log("goodbye world"),
+                            },
+                        ]}
+                        state={contextMenuState}
+                    />
                 </div>
                 <div className="flex gap-1 h-10 p-1 rounded-md hover:bg-gray-200 ml-auto">
                     <div className="rounded-full bg-black">
