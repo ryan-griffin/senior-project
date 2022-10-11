@@ -8,26 +8,26 @@ interface Props {
     setState: (state: "hidden" | "shown") => void;
 }
 
-const CreatePost: FC<Props> = ({ state, setState }) => {
+const CreateCommunity: FC<Props> = ({ state, setState }) => {
     const router = useRouter();
 
-    const [title, setTitle] = useState("");
-    const [body, setBody] = useState("");
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
 
     const stateClass =
         state == "hidden"
             ? "-translate-y-[calc(100%+3.5rem)]"
             : "translate-y-2";
 
-    async function createPost(event: any) {
+    async function createCommunity(event: any) {
         event.preventDefault();
-        await fetch("http://localhost:8080/create-post", {
+        await fetch("http://localhost:8080/create-community", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, body }),
+            body: JSON.stringify({ name, description }),
         });
-        setTitle("");
-        setBody("");
+        setName("");
+        setDescription("");
         setState("hidden");
         router.pathname == "/" ? router.replace("/") : router.push("/");
     }
@@ -35,10 +35,14 @@ const CreatePost: FC<Props> = ({ state, setState }) => {
     return (
         <form
             className={`flex flex-col w-[650px] p-4 gap-4 fixed z-0 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-md  duration-[250ms] ${stateClass}`}
-            onSubmit={createPost}
+            onSubmit={createCommunity}
         >
-            <Input placeholder="Title" value={title} onChange={setTitle} />
-            <Input placeholder="Body" value={body} onChange={setBody} />
+            <Input placeholder="Name" value={name} onChange={setName} />
+            <Input
+                placeholder="Description"
+                value={description}
+                onChange={setDescription}
+            />
             <div className="flex gap-4">
                 <Button
                     text="Cancel"
@@ -46,10 +50,10 @@ const CreatePost: FC<Props> = ({ state, setState }) => {
                     style="secondary"
                     onClick={() => setState("hidden")}
                 />
-                <Button text="Create Post" type="submit" style="primary" />
+                <Button text="Create Community" type="submit" style="primary" />
             </div>
         </form>
     );
 };
 
-export default CreatePost;
+export default CreateCommunity;

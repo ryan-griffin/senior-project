@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import CreatePost from "./CreatePost";
+import CreateCommunity from "./CreateCommunity";
 import ContextMenu from "./ContextMenu";
 
 const TopNav: FC = () => {
@@ -12,6 +13,8 @@ const TopNav: FC = () => {
 
     type state = "hidden" | "shown";
     const [createPostState, setCreatePostState] = useState<state>("hidden");
+    const [createCommunityState, setCreateCommunityState] =
+        useState<state>("hidden");
     const [createContextMenuState, setCreateContextMenuState] =
         useState<state>("hidden");
     const [userContextMenuState, setUserContextMenuState] =
@@ -69,7 +72,12 @@ const TopNav: FC = () => {
                 <div className="flex h-10 cursor-pointer">
                     <div
                         className="p-1 rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300 duration-100"
-                        onClick={() => setCreatePostState("shown")}
+                        onClick={() => {
+                            if (createCommunityState == "shown") {
+                                setCreateCommunityState("hidden");
+                            }
+                            setCreatePostState("shown");
+                        }}
                     >
                         <Image
                             src="/icons/plus.svg"
@@ -98,12 +106,22 @@ const TopNav: FC = () => {
                             {
                                 text: "New Post",
                                 icon: "test",
-                                onClick: () => setCreatePostState("shown"),
+                                onClick: () => {
+                                    if (createCommunityState == "shown") {
+                                        setCreateCommunityState("hidden");
+                                    }
+                                    setCreatePostState("shown");
+                                },
                             },
                             {
                                 text: "New Community",
                                 icon: "test",
-                                onClick: () => console.log("goodbye world"),
+                                onClick: () => {
+                                    if (createPostState == "shown") {
+                                        setCreatePostState("hidden");
+                                    }
+                                    setCreateCommunityState("shown");
+                                },
                             },
                         ]}
                         state={createContextMenuState}
@@ -152,6 +170,10 @@ const TopNav: FC = () => {
                 </div>
             </nav>
             <CreatePost state={createPostState} setState={setCreatePostState} />
+            <CreateCommunity
+                state={createCommunityState}
+                setState={setCreateCommunityState}
+            />
         </>
     );
 };
