@@ -4,7 +4,7 @@ mod schema;
 
 use actions::*;
 use actix_cors::Cors;
-use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer};
+use actix_web::{delete, get, post, web, App, Error, HttpResponse, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};
 use models::*;
@@ -21,6 +21,16 @@ async fn fetch_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().json(posts))
 }
 
+#[get("/post/{id}")]
+async fn fetch_post(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<HttpResponse, Error> {
+    let post = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        get_post(&mut connection, id.into_inner())
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(post))
+}
+
 #[post("/create-post")]
 async fn fetch_create_post(
     pool: web::Data<DbPool>,
@@ -34,14 +44,14 @@ async fn fetch_create_post(
     Ok(HttpResponse::Ok().json(post))
 }
 
-#[post("/delete-post")]
+#[delete("/delete-post/{id}")]
 async fn fetch_delete_post(
     pool: web::Data<DbPool>,
-    post: web::Json<Post>,
+    id: web::Path<i32>,
 ) -> Result<HttpResponse, Error> {
     web::block(move || {
         let mut connection = pool.get().unwrap();
-        delete_post(&mut connection, post.id);
+        delete_post(&mut connection, id.into_inner());
     })
     .await?;
     Ok(HttpResponse::Ok().body("Post deleted"))
@@ -66,6 +76,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .wrap(cors)
+            .service(fetch_post)
             .service(fetch_posts)
             .service(fetch_create_post)
             .service(fetch_delete_post)

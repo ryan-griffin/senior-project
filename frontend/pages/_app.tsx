@@ -8,7 +8,7 @@ export default function app({ Component, pageProps }: AppProps) {
         <>
             <TopNav />
             <SideNav />
-            <div className="mt-12 ml-64 bg-gray-100">
+            <div className="mt-12 ml-64 p-4">
                 <Component {...pageProps} />
             </div>
         </>

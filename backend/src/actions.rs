@@ -1,6 +1,21 @@
 use crate::models::*;
 use diesel::prelude::*;
 
+pub fn get_posts(connection: &mut MysqlConnection) -> Vec<Post> {
+    use crate::schema::posts::dsl::*;
+
+    posts.load::<Post>(connection).expect("Error loading posts")
+}
+
+pub fn get_post(connection: &mut MysqlConnection, post_id: i32) -> Post {
+    use crate::schema::posts::dsl::*;
+
+    posts
+        .filter(id.eq(post_id))
+        .first(connection)
+        .expect("Error loading post")
+}
+
 pub fn create_post(connection: &mut MysqlConnection, title_str: &str, body_str: &str) -> Post {
     use crate::schema::posts;
 
@@ -26,10 +41,4 @@ pub fn delete_post(connection: &mut MysqlConnection, post_id: i32) {
     diesel::delete(posts.filter(id.eq(post_id)))
         .execute(connection)
         .expect("Error deleting post");
-}
-
-pub fn get_posts(connection: &mut MysqlConnection) -> Vec<Post> {
-    use crate::schema::posts::dsl::*;
-
-    posts.load::<Post>(connection).expect("Error loading posts")
 }

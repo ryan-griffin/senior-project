@@ -129,12 +129,6 @@ const TopNav: FC = () => {
                             />
                         </div>
                         <div className="m-auto">Username</div>
-                        <Image
-                            src="/icons/down_arrow.svg"
-                            alt=""
-                            height={iconSize}
-                            width={iconSize}
-                        />
                     </div>
                     <ContextMenu
                         items={[
@@ -153,6 +147,7 @@ const TopNav: FC = () => {
                         ]}
                         state={userContextMenuState}
                         setState={setUserContextMenuState}
+                        width={108}
                     />
                 </div>
             </nav>

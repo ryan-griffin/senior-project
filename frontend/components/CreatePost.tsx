@@ -23,13 +23,15 @@ const CreatePost: FC<Props> = ({ state, setState }) => {
 
     async function createPost(event: any) {
         event.preventDefault();
-        const res = await fetch("http://localhost:8080/create-post", {
+        await fetch("http://localhost:8080/create-post", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ title, body }),
         });
-        const post: post = await res.json();
-        router.reload();
+        setTitle("");
+        setBody("");
+        setState("hidden");
+        router.pathname == "/" ? router.replace("/") : router.push("/");
     }
 
     interface post {
