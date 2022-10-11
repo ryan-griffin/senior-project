@@ -42,3 +42,35 @@ pub fn delete_post(connection: &mut MysqlConnection, post_id: i32) {
         .execute(connection)
         .expect("Error deleting post");
 }
+
+pub fn get_community(connection: &mut MysqlConnection, community_id: i32) -> Community {
+    use crate::schema::communities::dsl::*;
+
+    communities
+        .filter(id.eq(community_id))
+        .first(connection)
+        .expect("Error loading community")
+}
+
+pub fn create_communtiy(
+    connection: &mut MysqlConnection,
+    name_str: &str,
+    description_str: &str,
+) -> Community {
+    use crate::schema::communities;
+
+    let name = name_str.to_string();
+    let description = description_str.to_string();
+
+    let new_community = NewCommunity { name, description };
+
+    diesel::insert_into(communities::table)
+        .values(&new_community)
+        .execute(connection)
+        .expect("Error creating new community");
+
+    communities::table
+        .order(communities::id.desc())
+        .first(connection)
+        .unwrap()
+}

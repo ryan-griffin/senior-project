@@ -12,7 +12,7 @@ use models::*;
 type DbPool = Pool<ConnectionManager<MysqlConnection>>;
 
 #[get("/posts")]
-async fn fetch_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
+async fn fetch_get_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     let posts = web::block(move || {
         let mut connection = pool.get().unwrap();
         get_posts(&mut connection)
@@ -22,7 +22,10 @@ async fn fetch_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
 }
 
 #[get("/post/{id}")]
-async fn fetch_post(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<HttpResponse, Error> {
+async fn fetch_get_post(
+    pool: web::Data<DbPool>,
+    id: web::Path<i32>,
+) -> Result<HttpResponse, Error> {
     let post = web::block(move || {
         let mut connection = pool.get().unwrap();
         get_post(&mut connection, id.into_inner())
@@ -57,6 +60,32 @@ async fn fetch_delete_post(
     Ok(HttpResponse::Ok().body("Post deleted"))
 }
 
+#[get("/community/{id}")]
+async fn fetch_get_community(
+    pool: web::Data<DbPool>,
+    id: web::Path<i32>,
+) -> Result<HttpResponse, Error> {
+    let community = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        get_community(&mut connection, id.into_inner())
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(community))
+}
+
+#[post("/create-community")]
+async fn fetch_create_community(
+    pool: web::Data<DbPool>,
+    community: web::Json<NewCommunity>,
+) -> Result<HttpResponse, Error> {
+    let community = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        create_communtiy(&mut connection, &community.name, &community.description)
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(community))
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
@@ -76,10 +105,12 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .wrap(cors)
-            .service(fetch_post)
-            .service(fetch_posts)
+            .service(fetch_get_posts)
+            .service(fetch_get_post)
             .service(fetch_create_post)
             .service(fetch_delete_post)
+            .service(fetch_get_community)
+            .service(fetch_create_community)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

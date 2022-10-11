@@ -1,0 +1,8 @@
+-- Your SQL goes here
+
+CREATE TABLE communities (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
