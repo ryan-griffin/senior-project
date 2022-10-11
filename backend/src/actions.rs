@@ -52,7 +52,7 @@ pub fn get_community(connection: &mut MysqlConnection, community_id: i32) -> Com
         .expect("Error loading community")
 }
 
-pub fn create_communtiy(
+pub fn create_community(
     connection: &mut MysqlConnection,
     name_str: &str,
     description_str: &str,

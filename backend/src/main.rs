@@ -80,7 +80,7 @@ async fn fetch_create_community(
 ) -> Result<HttpResponse, Error> {
     let community = web::block(move || {
         let mut connection = pool.get().unwrap();
-        create_communtiy(&mut connection, &community.name, &community.description)
+        create_community(&mut connection, &community.name, &community.description)
     })
     .await?;
     Ok(HttpResponse::Ok().json(community))
