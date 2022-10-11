@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Post {
     pub id: i32,
+    pub community: String,
     pub title: String,
     pub body: String,
     pub datetime: NaiveDateTime,
@@ -14,13 +15,13 @@ pub struct Post {
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = posts)]
 pub struct NewPost {
+    pub community: String,
     pub title: String,
     pub body: String,
 }
 
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Community {
-    pub id: i32,
     pub name: String,
     pub description: String,
     pub datetime: NaiveDateTime,

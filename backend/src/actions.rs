@@ -1,59 +1,66 @@
 use crate::models::*;
 use diesel::prelude::*;
 
-pub fn get_posts(connection: &mut MysqlConnection) -> Vec<Post> {
+pub fn get_posts(conn: &mut MysqlConnection) -> Vec<Post> {
     use crate::schema::posts::dsl::*;
 
-    posts.load::<Post>(connection).expect("Error loading posts")
+    posts.load::<Post>(conn).expect("Error loading posts")
 }
 
-pub fn get_post(connection: &mut MysqlConnection, post_id: i32) -> Post {
+pub fn get_post(conn: &mut MysqlConnection, post_id: i32) -> Post {
     use crate::schema::posts::dsl::*;
 
     posts
         .filter(id.eq(post_id))
-        .first(connection)
+        .first(conn)
         .expect("Error loading post")
 }
 
-pub fn create_post(connection: &mut MysqlConnection, title_str: &str, body_str: &str) -> Post {
+pub fn create_post(
+    conn: &mut MysqlConnection,
+    community_str: &str,
+    title_str: &str,
+    body_str: &str,
+) -> Post {
     use crate::schema::posts;
 
+    let community = community_str.to_string();
     let title = title_str.to_string();
     let body = body_str.to_string();
 
-    let new_post = NewPost { title, body };
+    let new_post = NewPost {
+        community,
+        title,
+        body,
+    };
 
     diesel::insert_into(posts::table)
         .values(&new_post)
-        .execute(connection)
+        .execute(conn)
         .expect("Error creating new post");
 
-    posts::table
-        .order(posts::id.desc())
-        .first(connection)
-        .unwrap()
+    posts::table.order(posts::id.desc()).first(conn).unwrap()
 }
 
-pub fn delete_post(connection: &mut MysqlConnection, post_id: i32) {
+pub fn delete_post(conn: &mut MysqlConnection, post_id: i32) {
     use crate::schema::posts::dsl::*;
 
     diesel::delete(posts.filter(id.eq(post_id)))
-        .execute(connection)
+        .execute(conn)
         .expect("Error deleting post");
 }
 
-pub fn get_community(connection: &mut MysqlConnection, community_id: i32) -> Community {
+pub fn get_community(conn: &mut MysqlConnection, community_name: &str) -> Community {
     use crate::schema::communities::dsl::*;
 
     communities
-        .filter(id.eq(community_id))
-        .first(connection)
+        .filter(name.eq(community_name))
+        .first(conn)
         .expect("Error loading community")
 }
 
 pub fn create_community(
-    connection: &mut MysqlConnection,
+    conn: &mut MysqlConnection,
     name_str: &str,
     description_str: &str,
 ) -> Community {
@@ -66,11 +73,11 @@ pub fn create_community(
 
     diesel::insert_into(communities::table)
         .values(&new_community)
-        .execute(connection)
+        .execute(conn)
         .expect("Error creating new community");
 
     communities::table
-        .order(communities::id.desc())
-        .first(connection)
+        .filter(communities::name.eq(name_str))
+        .first(conn)
         .unwrap()
 }

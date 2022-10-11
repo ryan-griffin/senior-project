@@ -1,0 +1,10 @@
+-- Your SQL goes here
+
+CREATE TABLE posts (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  community VARCHAR(255) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  body TEXT NOT NULL,
+  datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (community) REFERENCES communities(name)
+)

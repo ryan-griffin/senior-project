@@ -2,7 +2,13 @@ import { FC } from "react";
 import { useRouter } from "next/router";
 
 interface Props {
-    post: { id: number; title: String; body: String; datetime: String };
+    post: {
+        id: number;
+        community: string;
+        title: string;
+        body: string;
+        datetime: string;
+    };
 }
 
 const Post: FC<Props> = ({ post }) => {
@@ -24,6 +30,7 @@ const Post: FC<Props> = ({ post }) => {
             >
                 Id: {post.id}
             </div>
+            <div>Community: {post.community}</div>
             <div>Title: {post.title}</div>
             <div>Body: {post.body}</div>
             <div>Datetime: {post.datetime}</div>

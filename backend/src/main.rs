@@ -41,7 +41,7 @@ async fn fetch_create_post(
 ) -> Result<HttpResponse, Error> {
     let post = web::block(move || {
         let mut connection = pool.get().unwrap();
-        create_post(&mut connection, &post.title, &post.body)
+        create_post(&mut connection, &post.community, &post.title, &post.body)
     })
     .await?;
     Ok(HttpResponse::Ok().json(post))
@@ -60,14 +60,14 @@ async fn fetch_delete_post(
     Ok(HttpResponse::Ok().body("Post deleted"))
 }
 
-#[get("/community/{id}")]
+#[get("/community/{name}")]
 async fn fetch_get_community(
     pool: web::Data<DbPool>,
-    id: web::Path<i32>,
+    name: web::Path<String>,
 ) -> Result<HttpResponse, Error> {
     let community = web::block(move || {
         let mut connection = pool.get().unwrap();
-        get_community(&mut connection, id.into_inner())
+        get_community(&mut connection, &name.into_inner())
     })
     .await?;
     Ok(HttpResponse::Ok().json(community))
