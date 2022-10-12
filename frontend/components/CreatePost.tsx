@@ -10,9 +10,6 @@ interface Props {
 }
 
 const CreatePost: FC<Props> = ({ state, setState }) => {
-    type community = { name: string; description: string };
-    type item = { text: string; icon?: string; onClick: () => void };
-
     const stateClass =
         state == "hidden"
             ? "-translate-y-[calc(100%+3.5rem)]"
@@ -26,13 +23,15 @@ const CreatePost: FC<Props> = ({ state, setState }) => {
     const [communityMenuState, setCommunityMenuState] = useState<
         "hidden" | "shown"
     >("hidden");
-    const [items, setItems] = useState<item[]>([]);
+    const [items, setItems] = useState<{ text: string; onClick: () => void }[]>(
+        []
+    );
 
     async function getCommunities() {
         const res = await fetch("http://localhost:8080/communities");
         const communities = await res.json();
         setItems(() =>
-            communities.map((community: community) => ({
+            communities.map((community: { name: string }) => ({
                 text: community.name,
                 onClick: () => setCommunity(community.name),
             }))
