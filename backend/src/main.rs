@@ -60,6 +60,16 @@ async fn fetch_delete_post(
     Ok(HttpResponse::Ok().body("Post deleted"))
 }
 
+#[get("/communities")]
+async fn fetch_get_communities(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
+    let communities = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        get_communities(&mut connection)
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(communities))
+}
+
 #[get("/community/{name}")]
 async fn fetch_get_community(
     pool: web::Data<DbPool>,
@@ -109,6 +119,7 @@ async fn main() -> std::io::Result<()> {
             .service(fetch_get_post)
             .service(fetch_create_post)
             .service(fetch_delete_post)
+            .service(fetch_get_communities)
             .service(fetch_get_community)
             .service(fetch_create_community)
     })

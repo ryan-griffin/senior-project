@@ -50,6 +50,14 @@ pub fn delete_post(conn: &mut MysqlConnection, post_id: i32) {
         .expect("Error deleting post");
 }
 
+pub fn get_communities(conn: &mut MysqlConnection) -> Vec<Community> {
+    use crate::schema::communities::dsl::*;
+
+    communities
+        .load::<Community>(conn)
+        .expect("Error loading communities")
+}
+
 pub fn get_community(conn: &mut MysqlConnection, community_name: &str) -> Community {
     use crate::schema::communities::dsl::*;
 

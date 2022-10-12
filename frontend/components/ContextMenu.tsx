@@ -4,10 +4,10 @@ interface Props {
     items: { text: string; icon?: string; onClick: () => void }[];
     state: "hidden" | "shown";
     setState: (state: "hidden" | "shown") => void;
-    width?: number;
+    style?: React.CSSProperties;
 }
 
-const ContextMenu: FC<Props> = ({ items, state, setState, width }) => {
+const ContextMenu: FC<Props> = ({ items, state, setState, style }) => {
     const menuItems = items.map((item, key) => (
         <div
             className="p-2 rounded-md hover:bg-gray-200 duration-100 cursor-pointer"
@@ -34,7 +34,7 @@ const ContextMenu: FC<Props> = ({ items, state, setState, width }) => {
             style={{
                 maxHeight: state == "hidden" ? "0px" : `${height}px`,
                 transitionDuration: `${duration}ms`,
-                width: `${width}px`,
+                ...style,
             }}
         >
             <div className="m-1 gap-1">{menuItems}</div>

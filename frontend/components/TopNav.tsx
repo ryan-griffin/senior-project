@@ -165,7 +165,7 @@ const TopNav: FC = () => {
                         ]}
                         state={userContextMenuState}
                         setState={setUserContextMenuState}
-                        width={108}
+                        style={{ width: "108px" }}
                     />
                 </div>
             </nav>
