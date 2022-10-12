@@ -40,16 +40,17 @@ const CreatePost: FC<Props> = ({ state, setState }) => {
 
     async function createPost(event: any) {
         event.preventDefault();
-        await fetch("http://localhost:8080/create-post", {
+        const res = await fetch("http://localhost:8080/create-post", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ community, title, body }),
         });
+        const post = await res.json();
         setCommunity("");
         setTitle("");
         setBody("");
         setState("hidden");
-        router.pathname == "/" ? router.replace("/") : router.push("/");
+        router.push(`/post/${post.id}`);
     }
 
     useEffect(() => {

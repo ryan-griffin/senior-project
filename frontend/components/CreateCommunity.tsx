@@ -29,7 +29,7 @@ const CreateCommunity: FC<Props> = ({ state, setState }) => {
         setName("");
         setDescription("");
         setState("hidden");
-        router.pathname == "/" ? router.replace("/") : router.push("/");
+        router.push(`/community/${name}`);
     }
 
     return (
