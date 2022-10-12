@@ -10,7 +10,6 @@ export async function getServerSideProps(context: any) {
 
 interface Props {
     community: {
-        id: number;
         name: string;
         description: string;
         datetime: string;
@@ -22,7 +21,6 @@ const CommunityPage: NextPage<Props> = ({ community }) => {
         <div className="rounded-lg shadow-md overflow-hidden">
             <div className="bg-black w-full h-56"></div>
             <div className="bg-white p-4">
-                <p>Id:{community.id}</p>
                 <h1>Name: {community.name}</h1>
                 <p>Description: {community.description}</p>
                 <p>Datetime: {community.datetime}</p>

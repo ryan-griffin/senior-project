@@ -30,7 +30,12 @@ const Post: FC<Props> = ({ post }) => {
             >
                 Id: {post.id}
             </div>
-            <div>Community: {post.community}</div>
+            <div
+                className="cursor-pointer"
+                onClick={() => router.push(`/community/${post.community}`)}
+            >
+                Community: {post.community}
+            </div>
             <div>Title: {post.title}</div>
             <div>Body: {post.body}</div>
             <div>Datetime: {post.datetime}</div>
