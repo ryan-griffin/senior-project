@@ -8,7 +8,13 @@ export async function getServerSideProps(context: any) {
 }
 
 interface Props {
-    post: { id: number; title: string; body: string; datetime: string };
+    post: {
+        id: number;
+        community: string;
+        title: string;
+        body: string;
+        datetime: string;
+    };
 }
 
 const PostPage: NextPage<Props> = ({ post }) => {
