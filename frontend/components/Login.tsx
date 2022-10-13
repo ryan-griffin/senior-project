@@ -17,7 +17,15 @@ const Login: FC<Props> = ({ state, setState }) => {
         >
             <div className="flex flex-col p-4 gap-4 bg-white rounded-lg shadow-md w-80">
                 <h1 className="text-2xl font-bold text-center">Login</h1>
-                <SegmentedControl options={["Login", "Sign Up"]} />
+                <SegmentedControl
+                    options={[
+                        { text: "Login", action: () => console.log("Login") },
+                        {
+                            text: "Sign Up",
+                            action: () => console.log("Sign Up"),
+                        },
+                    ]}
+                />
                 <Input
                     placeholder="Username"
                     value=""

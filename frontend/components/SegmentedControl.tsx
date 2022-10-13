@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useState } from "react";
 
 interface Props {
-    options: string[];
+    options: { text: string; action: () => void }[];
 }
 
 const SegmentedControl: FC<Props> = ({ options }) => {
@@ -10,15 +10,20 @@ const SegmentedControl: FC<Props> = ({ options }) => {
     const segActiveClass = `${segClass} bg-white shadow-md`;
     const segInactiveClass = `${segClass} hover:bg-gray-300`;
 
-    const [activeTab, setActiveTab] = useState<string>(options[0]);
+    const [activeTab, setActiveTab] = useState<string>(options[0].text);
 
     const segOptions = options.map((option, index) => (
         <button
             key={index}
-            className={option == activeTab ? segActiveClass : segInactiveClass}
-            onClick={() => setActiveTab(option)}
+            className={
+                option.text == activeTab ? segActiveClass : segInactiveClass
+            }
+            onClick={() => {
+                setActiveTab(option.text);
+                option.action();
+            }}
         >
-            {option}
+            {option.text}
         </button>
     ));
 
