@@ -21,6 +21,19 @@ async fn fetch_get_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error>
     Ok(HttpResponse::Ok().json(posts))
 }
 
+#[get("/posts/{community}")]
+async fn fetch_get_posts_by_community(
+    pool: web::Data<DbPool>,
+    community: web::Path<String>,
+) -> Result<HttpResponse, Error> {
+    let posts = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        get_posts_by_community(&mut connection, &community)
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(posts))
+}
+
 #[get("/post/{id}")]
 async fn fetch_get_post(
     pool: web::Data<DbPool>,
@@ -116,6 +129,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .wrap(cors)
             .service(fetch_get_posts)
+            .service(fetch_get_posts_by_community)
             .service(fetch_get_post)
             .service(fetch_create_post)
             .service(fetch_delete_post)

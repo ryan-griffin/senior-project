@@ -7,6 +7,15 @@ pub fn get_posts(conn: &mut MysqlConnection) -> Vec<Post> {
     posts.load::<Post>(conn).expect("Error loading posts")
 }
 
+pub fn get_posts_by_community(conn: &mut MysqlConnection, community_name: &str) -> Vec<Post> {
+    use crate::schema::posts::dsl::*;
+
+    posts
+        .filter(community.eq(community_name))
+        .load::<Post>(conn)
+        .expect("Error loading posts")
+}
+
 pub fn get_post(conn: &mut MysqlConnection, post_id: i32) -> Post {
     use crate::schema::posts::dsl::*;
 

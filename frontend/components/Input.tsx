@@ -3,6 +3,7 @@ import { FC } from "react";
 interface InputProps {
     placeholder: string;
     value: string;
+    type?: "password";
     onChange: (value: string) => void;
     onFocus?: () => void;
     onFocusOut?: () => void;
@@ -12,6 +13,7 @@ interface InputProps {
 const Input: FC<InputProps> = ({
     placeholder,
     value,
+    type,
     onChange,
     onFocus,
     onFocusOut,
@@ -23,6 +25,7 @@ const Input: FC<InputProps> = ({
         minLength={1}
         placeholder={placeholder}
         value={value}
+        type={type}
         onChange={(event) => onChange(event.target.value)}
         onFocus={onFocus}
         onBlur={onFocusOut}

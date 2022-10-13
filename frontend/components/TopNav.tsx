@@ -5,6 +5,7 @@ import { useState } from "react";
 import CreatePost from "./CreatePost";
 import CreateCommunity from "./CreateCommunity";
 import ContextMenu from "./ContextMenu";
+import Login from "./Login";
 
 const TopNav: FC = () => {
     const buttonClass =
@@ -19,6 +20,16 @@ const TopNav: FC = () => {
         useState<state>("hidden");
     const [userContextMenuState, setUserContextMenuState] =
         useState<state>("hidden");
+    const [loginState, setLoginState] = useState<state>("hidden");
+
+    const loggedIn = false;
+
+    const profileButton = loggedIn
+        ? () =>
+              userContextMenuState == "hidden"
+                  ? setUserContextMenuState("shown")
+                  : setUserContextMenuState("hidden")
+        : () => setLoginState("shown");
 
     return (
         <>
@@ -129,14 +140,7 @@ const TopNav: FC = () => {
                     />
                 </div>
 
-                <div
-                    className="flex ml-auto"
-                    onClick={() => {
-                        userContextMenuState == "hidden"
-                            ? setUserContextMenuState("shown")
-                            : setUserContextMenuState("hidden");
-                    }}
-                >
+                <button className="flex ml-auto" onClick={profileButton}>
                     <div className="flex h-10 p-1 gap-1 rounded-md hover:bg-gray-200 cursor-pointer duration-100">
                         <div className="rounded-full bg-black">
                             <Image
@@ -146,7 +150,7 @@ const TopNav: FC = () => {
                                 width={iconSize}
                             />
                         </div>
-                        <div className="m-auto">Username</div>
+                        <div className="m-auto">Login</div>
                     </div>
                     <ContextMenu
                         items={[
@@ -165,15 +169,15 @@ const TopNav: FC = () => {
                         ]}
                         state={userContextMenuState}
                         setState={setUserContextMenuState}
-                        style={{ width: "108px" }}
                     />
-                </div>
+                </button>
             </nav>
             <CreatePost state={createPostState} setState={setCreatePostState} />
             <CreateCommunity
                 state={createCommunityState}
                 setState={setCreateCommunityState}
             />
+            <Login state={loginState} setState={setLoginState} />
         </>
     );
 };
