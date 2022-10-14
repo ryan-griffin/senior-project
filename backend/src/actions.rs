@@ -79,14 +79,20 @@ pub fn get_community(conn: &mut MysqlConnection, community_name: &str) -> Commun
 pub fn create_community(
     conn: &mut MysqlConnection,
     name_str: &str,
+    user_str: &str,
     description_str: &str,
 ) -> Community {
     use crate::schema::communities;
 
     let name = name_str.to_string();
+    let user = user_str.to_string();
     let description = description_str.to_string();
 
-    let new_community = NewCommunity { name, description };
+    let new_community = NewCommunity {
+        name,
+        user,
+        description,
+    };
 
     diesel::insert_into(communities::table)
         .values(&new_community)
