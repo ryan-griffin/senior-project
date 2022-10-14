@@ -1,7 +1,0 @@
--- Your SQL goes here
-
-CREATE TABLE communities (
-    name VARCHAR(255) PRIMARY KEY UNIQUE NOT NULL,
-    description TEXT NOT NULL,
-    datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-)
