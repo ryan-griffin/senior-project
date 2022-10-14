@@ -24,13 +24,6 @@ const TopNav: FC = () => {
 
     const loggedIn = false;
 
-    const profileButton = loggedIn
-        ? () =>
-              userContextMenuState == "hidden"
-                  ? setUserContextMenuState("shown")
-                  : setUserContextMenuState("hidden")
-        : () => setLoginState("shown");
-
     return (
         <>
             <nav className="fixed w-full z-10 h-12 border-solid border-b border-gray-300 top-0 bg-white flex p-1 gap-1">
@@ -140,7 +133,17 @@ const TopNav: FC = () => {
                     />
                 </div>
 
-                <button className="flex ml-auto" onClick={profileButton}>
+                <button
+                    className="flex ml-auto"
+                    onClick={
+                        loggedIn
+                            ? () =>
+                                  userContextMenuState == "hidden"
+                                      ? setUserContextMenuState("shown")
+                                      : setUserContextMenuState("hidden")
+                            : () => setLoginState("shown")
+                    }
+                >
                     <div className="flex h-10 p-1 gap-1 rounded-md hover:bg-gray-200 cursor-pointer duration-100">
                         <div className="rounded-full bg-black">
                             <Image

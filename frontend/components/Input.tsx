@@ -4,7 +4,7 @@ interface InputProps {
     placeholder: string;
     value: string;
     type?: "password";
-    onChange: (value: string) => void;
+    onChange: (event: string) => void;
     onFocus?: () => void;
     onFocusOut?: () => void;
     style?: React.CSSProperties;
