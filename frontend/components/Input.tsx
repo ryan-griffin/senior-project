@@ -20,7 +20,7 @@ const Input: FC<InputProps> = ({
     style,
 }) => (
     <input
-        className="bg-gray-200 rounded-md outline-none p-2 focus:bg-gray-300"
+        className="bg-gray-200 rounded-md outline-none p-2 duration-100 focus:bg-gray-300"
         style={style}
         minLength={1}
         placeholder={placeholder}

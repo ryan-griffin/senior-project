@@ -19,7 +19,7 @@ const Login: FC<Props> = ({ state, setState }) => {
         <div
             className={`fixed top-0 left-0 z-20 h-screen w-screen bg-black/50 p-4 justify-center items-center ${containerClass}`}
         >
-            <div className="flex flex-col p-4 gap-4 bg-white rounded-lg shadow-md w-[352px]">
+            <div className="flex flex-col p-4 gap-4 bg-white rounded-lg shadow-md w-[344px]">
                 <h1 className="text-2xl font-bold text-center">
                     {typeState == "login" ? "Login" : "Sign Up"}
                 </h1>

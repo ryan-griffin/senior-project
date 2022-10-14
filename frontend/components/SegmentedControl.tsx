@@ -6,25 +6,23 @@ interface Props {
 }
 
 const SegmentedControl: FC<Props> = ({ options }) => {
-    const segActiveClass = "w-full p-2 rounded-md duration-100 z-10";
+    const segActiveClass = "w-full z-10 p-1 rounded-md duration-100";
     const segInactiveClass = `${segActiveClass} hover:bg-gray-300`;
+
+    const width = `calc(${100 / options.length}% - 0.5rem)`;
+
+    const translate = options.map((_, index) =>
+        index > 0
+            ? `translateX(calc(${index.toString()}00% + ${index * 0.5}rem))`
+            : "translateX(0)"
+    );
 
     const [activeTab, setActiveTab] = useState(() =>
         options.indexOf(options[0])
     );
 
-    const translate = options.map((_, index) => {
-        if (index > 0) {
-            const percent = `${index.toString()}00`;
-            const px = index * 8;
-            return `translateX(calc(${percent}% + ${px}px))`;
-        } else {
-            return "translateX(0)";
-        }
-    });
-
     return (
-        <div className="flex p-1 gap-1 bg-gray-200 rounded-md">
+        <div className="flex p-1 gap-1 bg-gray-200 rounded-md relative">
             {options.map((option, index) => {
                 return (
                     <button
@@ -44,9 +42,10 @@ const SegmentedControl: FC<Props> = ({ options }) => {
                 );
             })}
             <div
-                className="bg-white h-[40px] w-[152px] rounded-md shadow-md absolute duration-100"
+                className="bg-white h-[32px] rounded-md shadow-md absolute duration-200"
                 style={{
-                    transform: `${translate[activeTab]}`,
+                    width: width,
+                    transform: translate[activeTab],
                 }}
             ></div>
         </div>
