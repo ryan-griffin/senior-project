@@ -9,27 +9,16 @@ pub fn get_user(conn: &mut MysqlConnection, username_str: &str) -> User {
         .expect("Error loading user")
 }
 
-pub fn create_user(
-    conn: &mut MysqlConnection,
-    username_str: &str,
-    email_str: &str,
-    password_str: &str,
-) -> User {
+pub fn create_user(conn: &mut MysqlConnection, user: &NewUser) -> User {
     use crate::schema::users;
 
-    let new_user = NewUser {
-        username: username_str.to_string(),
-        email: email_str.to_string(),
-        password: password_str.to_string(),
-    };
-
     diesel::insert_into(users::table)
-        .values(&new_user)
+        .values(user)
         .execute(conn)
         .expect("Error creating new user");
 
     users::table
-        .filter(users::username.eq(username_str))
+        .filter(users::username.eq(&user.username))
         .first(conn)
         .unwrap()
 }
@@ -58,22 +47,11 @@ pub fn get_post(conn: &mut MysqlConnection, post_id: i32) -> Post {
         .expect("Error loading post")
 }
 
-pub fn create_post(
-    conn: &mut MysqlConnection,
-    community_str: &str,
-    title_str: &str,
-    body_str: &str,
-) -> Post {
+pub fn create_post(conn: &mut MysqlConnection, post: &NewPost) -> Post {
     use crate::schema::posts;
 
-    let new_post = NewPost {
-        community: community_str.to_string(),
-        title: title_str.to_string(),
-        body: body_str.to_string(),
-    };
-
     diesel::insert_into(posts::table)
-        .values(&new_post)
+        .values(post)
         .execute(conn)
         .expect("Error creating new post");
 
@@ -105,27 +83,16 @@ pub fn get_community(conn: &mut MysqlConnection, community_name: &str) -> Commun
         .expect("Error loading community")
 }
 
-pub fn create_community(
-    conn: &mut MysqlConnection,
-    name_str: &str,
-    user_str: &str,
-    description_str: &str,
-) -> Community {
+pub fn create_community(conn: &mut MysqlConnection, community: &NewCommunity) -> Community {
     use crate::schema::communities;
 
-    let new_community = NewCommunity {
-        name: name_str.to_string(),
-        user: user_str.to_string(),
-        description: description_str.to_string(),
-    };
-
     diesel::insert_into(communities::table)
-        .values(&new_community)
+        .values(community)
         .execute(conn)
         .expect("Error creating new community");
 
     communities::table
-        .filter(communities::name.eq(name_str))
+        .filter(communities::name.eq(&community.name))
         .first(conn)
         .unwrap()
 }

@@ -31,7 +31,7 @@ async fn fetch_create_user(
 ) -> Result<HttpResponse, Error> {
     let user = web::block(move || {
         let mut connection = pool.get().unwrap();
-        create_user(&mut connection, &user.username, &user.email, &user.password)
+        create_user(&mut connection, &user.into_inner())
     })
     .await?;
     Ok(HttpResponse::Ok().json(user))
@@ -80,7 +80,7 @@ async fn fetch_create_post(
 ) -> Result<HttpResponse, Error> {
     let post = web::block(move || {
         let mut connection = pool.get().unwrap();
-        create_post(&mut connection, &post.community, &post.title, &post.body)
+        create_post(&mut connection, &post)
     })
     .await?;
     Ok(HttpResponse::Ok().json(post))
@@ -129,12 +129,7 @@ async fn fetch_create_community(
 ) -> Result<HttpResponse, Error> {
     let community = web::block(move || {
         let mut connection = pool.get().unwrap();
-        create_community(
-            &mut connection,
-            &community.name,
-            &community.user,
-            &community.description,
-        )
+        create_community(&mut connection, &community)
     })
     .await?;
     Ok(HttpResponse::Ok().json(community))
