@@ -1,6 +1,39 @@
 use crate::models::*;
 use diesel::prelude::*;
 
+pub fn get_user(conn: &mut MysqlConnection, username_str: &str) -> User {
+    use crate::schema::users::dsl::*;
+    users
+        .filter(username.eq(username_str))
+        .first::<User>(conn)
+        .expect("Error loading user")
+}
+
+pub fn create_user(
+    conn: &mut MysqlConnection,
+    username_str: &str,
+    email_str: &str,
+    password_str: &str,
+) -> User {
+    use crate::schema::users;
+
+    let new_user = NewUser {
+        username: username_str.to_string(),
+        email: email_str.to_string(),
+        password: password_str.to_string(),
+    };
+
+    diesel::insert_into(users::table)
+        .values(&new_user)
+        .execute(conn)
+        .expect("Error creating new user");
+
+    users::table
+        .filter(users::username.eq(username_str))
+        .first(conn)
+        .unwrap()
+}
+
 pub fn get_posts(conn: &mut MysqlConnection) -> Vec<Post> {
     use crate::schema::posts::dsl::*;
 
@@ -33,14 +66,10 @@ pub fn create_post(
 ) -> Post {
     use crate::schema::posts;
 
-    let community = community_str.to_string();
-    let title = title_str.to_string();
-    let body = body_str.to_string();
-
     let new_post = NewPost {
-        community,
-        title,
-        body,
+        community: community_str.to_string(),
+        title: title_str.to_string(),
+        body: body_str.to_string(),
     };
 
     diesel::insert_into(posts::table)
@@ -84,14 +113,10 @@ pub fn create_community(
 ) -> Community {
     use crate::schema::communities;
 
-    let name = name_str.to_string();
-    let user = user_str.to_string();
-    let description = description_str.to_string();
-
     let new_community = NewCommunity {
-        name,
-        user,
-        description,
+        name: name_str.to_string(),
+        user: user_str.to_string(),
+        description: description_str.to_string(),
     };
 
     diesel::insert_into(communities::table)

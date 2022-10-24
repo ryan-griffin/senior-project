@@ -11,6 +11,32 @@ use models::*;
 
 type DbPool = Pool<ConnectionManager<MysqlConnection>>;
 
+#[get("/user/{username}")]
+async fn fetch_get_user(
+    pool: web::Data<DbPool>,
+    username: web::Path<String>,
+) -> Result<HttpResponse, Error> {
+    let user = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        get_user(&mut connection, &username.into_inner())
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(user))
+}
+
+#[get("/create-user")]
+async fn fetch_create_user(
+    pool: web::Data<DbPool>,
+    user: web::Json<NewUser>,
+) -> Result<HttpResponse, Error> {
+    let user = web::block(move || {
+        let mut connection = pool.get().unwrap();
+        create_user(&mut connection, &user.username, &user.email, &user.password)
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(user))
+}
+
 #[get("/posts")]
 async fn fetch_get_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     let posts = web::block(move || {
@@ -133,6 +159,8 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .wrap(cors)
+            .service(fetch_get_user)
+            .service(fetch_create_user)
             .service(fetch_get_posts)
             .service(fetch_get_posts_by_community)
             .service(fetch_get_post)
