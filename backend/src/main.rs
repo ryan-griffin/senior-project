@@ -4,7 +4,7 @@ mod schema;
 
 use actions::*;
 use actix_cors::Cors;
-use actix_web::{delete, get, post, web, App, Error, HttpResponse, HttpServer};
+use actix_web::{delete, get, middleware, post, web, App, Error, HttpResponse, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};
 use models::*;
@@ -161,9 +161,12 @@ async fn main() -> std::io::Result<()> {
             .allow_any_header()
             .allow_any_method();
 
+        let logger = middleware::Logger::default();
+
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .wrap(cors)
+            .wrap(logger)
             .service(fetch_get_users)
             .service(fetch_get_user)
             .service(fetch_create_user)

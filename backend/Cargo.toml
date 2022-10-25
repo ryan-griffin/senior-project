@@ -7,9 +7,9 @@ edition = "2021"
 
 [dependencies]
 actix-cors = "0.6.2"
+actix-session = { version = "0.7.2", features = ["cookie-session"] }
 actix-web = "4.1.0"
-actix-web-httpauth = "0.8.0"
-chrono = { version="0.4.22", features = ["serde"] }
+chrono = { version = "0.4.22", features = ["serde"] }
 diesel = { version = "2.0.0", features = ["mysql", "chrono", "r2d2"] }
 dotenv = "0.15.0"
-serde = { version="1.0.144", features = ["derive"] }
+serde = { version = "1.0.144", features = ["derive"] }
