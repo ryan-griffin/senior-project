@@ -4,20 +4,21 @@ mod schema;
 
 use actions::*;
 use actix_cors::Cors;
-use actix_web::dev::ServiceRequest;
 use actix_web::{delete, get, post, web, App, Error, HttpResponse, HttpServer};
-use actix_web_httpauth::{extractors::basic::BasicAuth, middleware::HttpAuthentication};
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};
 use models::*;
 
 type DbPool = Pool<ConnectionManager<MysqlConnection>>;
 
-async fn validator(
-    req: ServiceRequest,
-    _credentials: BasicAuth,
-) -> Result<ServiceRequest, (Error, ServiceRequest)> {
-    Ok(req)
+#[get("/users")]
+async fn fetch_get_users(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
+    let users = web::block(move || {
+        let mut conn = pool.get().unwrap();
+        get_users(&mut conn)
+    })
+    .await?;
+    Ok(HttpResponse::Ok().json(users))
 }
 
 #[get("/user/{username}")]
@@ -26,8 +27,8 @@ async fn fetch_get_user(
     username: web::Path<String>,
 ) -> Result<HttpResponse, Error> {
     let user = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        get_user(&mut connection, &username.into_inner())
+        let mut conn = pool.get().unwrap();
+        get_user(&mut conn, &username.into_inner())
     })
     .await?;
     Ok(HttpResponse::Ok().json(user))
@@ -39,8 +40,8 @@ async fn fetch_create_user(
     user: web::Json<NewUser>,
 ) -> Result<HttpResponse, Error> {
     let user = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        create_user(&mut connection, &user.into_inner())
+        let mut conn = pool.get().unwrap();
+        create_user(&mut conn, &user.into_inner())
     })
     .await?;
     Ok(HttpResponse::Ok().json(user))
@@ -49,8 +50,8 @@ async fn fetch_create_user(
 #[get("/posts")]
 async fn fetch_get_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     let posts = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        get_posts(&mut connection)
+        let mut conn = pool.get().unwrap();
+        get_posts(&mut conn)
     })
     .await?;
     Ok(HttpResponse::Ok().json(posts))
@@ -62,8 +63,8 @@ async fn fetch_get_posts_by_community(
     community: web::Path<String>,
 ) -> Result<HttpResponse, Error> {
     let posts = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        get_posts_by_community(&mut connection, &community)
+        let mut conn = pool.get().unwrap();
+        get_posts_by_community(&mut conn, &community)
     })
     .await?;
     Ok(HttpResponse::Ok().json(posts))
@@ -75,8 +76,8 @@ async fn fetch_get_post(
     id: web::Path<i32>,
 ) -> Result<HttpResponse, Error> {
     let post = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        get_post(&mut connection, id.into_inner())
+        let mut conn = pool.get().unwrap();
+        get_post(&mut conn, id.into_inner())
     })
     .await?;
     Ok(HttpResponse::Ok().json(post))
@@ -88,8 +89,8 @@ async fn fetch_create_post(
     post: web::Json<NewPost>,
 ) -> Result<HttpResponse, Error> {
     let post = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        create_post(&mut connection, &post)
+        let mut conn = pool.get().unwrap();
+        create_post(&mut conn, &post)
     })
     .await?;
     Ok(HttpResponse::Ok().json(post))
@@ -101,8 +102,8 @@ async fn fetch_delete_post(
     id: web::Path<i32>,
 ) -> Result<HttpResponse, Error> {
     web::block(move || {
-        let mut connection = pool.get().unwrap();
-        delete_post(&mut connection, id.into_inner());
+        let mut conn = pool.get().unwrap();
+        delete_post(&mut conn, id.into_inner());
     })
     .await?;
     Ok(HttpResponse::Ok().body("Post deleted"))
@@ -111,8 +112,8 @@ async fn fetch_delete_post(
 #[get("/communities")]
 async fn fetch_get_communities(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     let communities = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        get_communities(&mut connection)
+        let mut conn = pool.get().unwrap();
+        get_communities(&mut conn)
     })
     .await?;
     Ok(HttpResponse::Ok().json(communities))
@@ -124,8 +125,8 @@ async fn fetch_get_community(
     name: web::Path<String>,
 ) -> Result<HttpResponse, Error> {
     let community = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        get_community(&mut connection, &name.into_inner())
+        let mut conn = pool.get().unwrap();
+        get_community(&mut conn, &name.into_inner())
     })
     .await?;
     Ok(HttpResponse::Ok().json(community))
@@ -137,8 +138,8 @@ async fn fetch_create_community(
     community: web::Json<NewCommunity>,
 ) -> Result<HttpResponse, Error> {
     let community = web::block(move || {
-        let mut connection = pool.get().unwrap();
-        create_community(&mut connection, &community)
+        let mut conn = pool.get().unwrap();
+        create_community(&mut conn, &community)
     })
     .await?;
     Ok(HttpResponse::Ok().json(community))
@@ -160,12 +161,10 @@ async fn main() -> std::io::Result<()> {
             .allow_any_header()
             .allow_any_method();
 
-        let auth = HttpAuthentication::basic(validator);
-
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .wrap(cors)
-            .wrap(auth)
+            .service(fetch_get_users)
             .service(fetch_get_user)
             .service(fetch_create_user)
             .service(fetch_get_posts)

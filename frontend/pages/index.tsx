@@ -12,6 +12,7 @@ export async function getServerSideProps() {
 interface Props {
     posts: {
         id: number;
+        user: string;
         community: string;
         title: string;
         body: string;

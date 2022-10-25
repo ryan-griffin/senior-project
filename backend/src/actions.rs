@@ -1,6 +1,12 @@
 use crate::models::*;
 use diesel::prelude::*;
 
+pub fn get_users(conn: &mut MysqlConnection) -> Vec<User> {
+    use crate::schema::users::dsl::*;
+
+    users.load::<User>(conn).expect("Error loading posts")
+}
+
 pub fn get_user(conn: &mut MysqlConnection, username_str: &str) -> User {
     use crate::schema::users::dsl::*;
     users

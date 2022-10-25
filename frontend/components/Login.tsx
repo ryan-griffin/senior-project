@@ -15,6 +15,14 @@ const Login: FC<Props> = ({ state, setState }) => {
     const [password, setPassword] = useState<string>("");
     const containerClass = state == "shown" ? "flex" : "hidden";
 
+    async function createUser() {
+        await fetch("http://localhost:8080/create-user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+        });
+    }
+
     return (
         <div
             className={`fixed top-0 left-0 z-20 h-screen w-screen bg-black/50 p-4 justify-center items-center ${containerClass}`}
@@ -50,7 +58,7 @@ const Login: FC<Props> = ({ state, setState }) => {
                     onClick={
                         typeState == "login"
                             ? () => console.log("Login")
-                            : () => console.log("Sign Up")
+                            : () => createUser()
                     }
                 />
                 <Button
