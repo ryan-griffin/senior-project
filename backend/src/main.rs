@@ -4,12 +4,22 @@ mod schema;
 
 use actions::*;
 use actix_cors::Cors;
-use actix_web::{delete, get, middleware, post, web, App, Error, HttpResponse, HttpServer};
+use actix_web::{
+    delete, dev::ServiceRequest, get, middleware, post, web, App, Error, HttpResponse, HttpServer,
+};
+use actix_web_httpauth::{extractors::bearer::BearerAuth, middleware::HttpAuthentication};
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};
 use models::*;
 
 type DbPool = Pool<ConnectionManager<MysqlConnection>>;
+
+async fn validator(
+    req: ServiceRequest,
+    _credentials: BearerAuth,
+) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+    Ok(req)
+}
 
 #[get("/users")]
 async fn fetch_get_users(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
@@ -156,27 +166,21 @@ async fn main() -> std::io::Result<()> {
         .expect("Failed to create pool.");
 
     HttpServer::new(move || {
-        let cors = Cors::default()
-            .allow_any_origin()
-            .allow_any_header()
-            .allow_any_method();
-
-        let logger = middleware::Logger::default();
-
         App::new()
             .app_data(web::Data::new(pool.clone()))
-            .wrap(cors)
-            .wrap(logger)
+            .wrap(middleware::Logger::default())
+            .wrap(Cors::permissive())
+            .wrap(HttpAuthentication::bearer(validator))
             .service(fetch_get_users)
             .service(fetch_get_user)
-            .service(fetch_create_user)
             .service(fetch_get_posts)
             .service(fetch_get_posts_by_community)
             .service(fetch_get_post)
-            .service(fetch_create_post)
-            .service(fetch_delete_post)
             .service(fetch_get_communities)
             .service(fetch_get_community)
+            .service(fetch_create_user)
+            .service(fetch_create_post)
+            .service(fetch_delete_post)
             .service(fetch_create_community)
     })
     .bind(("127.0.0.1", 8080))?
