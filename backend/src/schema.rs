@@ -23,7 +23,6 @@ diesel::table! {
 diesel::table! {
     users (username) {
         username -> Varchar,
-        email -> Varchar,
         password -> Varchar,
         datetime -> Timestamp,
     }

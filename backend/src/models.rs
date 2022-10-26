@@ -40,7 +40,6 @@ pub struct NewCommunity {
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct User {
     pub username: String,
-    pub email: String,
     pub password: String,
     pub datetime: NaiveDateTime,
 }
@@ -49,6 +48,5 @@ pub struct User {
 #[diesel(table_name = users)]
 pub struct NewUser {
     pub username: String,
-    pub email: String,
     pub password: String,
 }
