@@ -36,35 +36,29 @@ const TopNav: FC = () => {
                     />
                 </div>
 
-                <Link href="/">
-                    <a className={buttonClass}>
-                        <Image
-                            src="/icons/home.svg"
-                            alt=""
-                            height={iconSize}
-                            width={iconSize}
-                        />
-                    </a>
+                <Link href="/" className={buttonClass}>
+                    <Image
+                        src="/icons/home.svg"
+                        alt=""
+                        height={iconSize}
+                        width={iconSize}
+                    />
                 </Link>
-                <Link href="/discover">
-                    <a className={buttonClass}>
-                        <Image
-                            src="/icons/discover.svg"
-                            alt=""
-                            height={iconSize}
-                            width={iconSize}
-                        />
-                    </a>
+                <Link href="/discover" className={buttonClass}>
+                    <Image
+                        src="/icons/discover.svg"
+                        alt=""
+                        height={iconSize}
+                        width={iconSize}
+                    />
                 </Link>
-                <Link href="/following">
-                    <a className={buttonClass}>
-                        <Image
-                            src="/icons/following.svg"
-                            alt=""
-                            height={iconSize}
-                            width={iconSize}
-                        />
-                    </a>
+                <Link href="/following" className={buttonClass}>
+                    <Image
+                        src="/icons/following.svg"
+                        alt=""
+                        height={iconSize}
+                        width={iconSize}
+                    />
                 </Link>
 
                 <input
