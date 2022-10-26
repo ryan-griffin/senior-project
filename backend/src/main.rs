@@ -4,22 +4,12 @@ mod schema;
 
 use actions::*;
 use actix_cors::Cors;
-use actix_web::{
-    delete, dev::ServiceRequest, get, middleware, post, web, App, Error, HttpResponse, HttpServer,
-};
-use actix_web_httpauth::{extractors::bearer::BearerAuth, middleware::HttpAuthentication};
+use actix_web::{delete, get, middleware, post, web, App, Error, HttpResponse, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};
 use models::*;
 
 type DbPool = Pool<ConnectionManager<MysqlConnection>>;
-
-async fn validator(
-    req: ServiceRequest,
-    _credentials: BearerAuth,
-) -> Result<ServiceRequest, (Error, ServiceRequest)> {
-    Ok(req)
-}
 
 #[get("/users")]
 async fn fetch_get_users(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
@@ -170,7 +160,6 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .wrap(middleware::Logger::default())
             .wrap(Cors::permissive())
-            .wrap(HttpAuthentication::bearer(validator))
             .service(fetch_get_users)
             .service(fetch_get_user)
             .service(fetch_get_posts)
