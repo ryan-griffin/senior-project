@@ -5,30 +5,28 @@ import Input from "./Input";
 import ContextMenu from "./ContextMenu";
 
 interface Props {
-    state: "hidden" | "shown";
-    setState: (state: "hidden" | "shown") => void;
+    visible: boolean;
+    setVisible: (state: boolean) => void;
 }
 
-const CreatePost: FC<Props> = ({ state, setState }) => {
+const CreatePost: FC<Props> = ({ visible, setVisible }) => {
     const stateClass =
-        state == "hidden"
-            ? "-translate-y-[calc(100%+3.5rem)]"
-            : "translate-y-2";
+        visible == false ? "-translate-y-[calc(100%+3.5rem)]" : "translate-y-2";
 
     const router = useRouter();
 
     const [community, setCommunity] = useState("");
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
-    const [communityMenuState, setCommunityMenuState] = useState<
-        "hidden" | "shown"
-    >("hidden");
+    const [communityMenuVisible, setCommunityMenuVisible] = useState(false);
     const [items, setItems] = useState<{ text: string; onClick: () => void }[]>(
         []
     );
 
     async function getCommunities() {
-        const res = await fetch("http://localhost:8080/communities");
+        const res = await fetch(
+            `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/communities`
+        );
         const communities = await res.json();
         setItems(() =>
             communities.map((community: { name: string }) => ({
@@ -40,16 +38,19 @@ const CreatePost: FC<Props> = ({ state, setState }) => {
 
     async function createPost(event: any) {
         event.preventDefault();
-        const res = await fetch("http://localhost:8080/create-post", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ community, title, body }),
-        });
+        const res = await fetch(
+            `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/create-post`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ community, title, body }),
+            }
+        );
         const post = await res.json();
         setCommunity("");
         setTitle("");
         setBody("");
-        setState("hidden");
+        setVisible(false);
         router.push(`/post/${post.id}`);
     }
 
@@ -67,14 +68,14 @@ const CreatePost: FC<Props> = ({ state, setState }) => {
                     placeholder="Community"
                     value={community}
                     onChange={setCommunity}
-                    onFocus={() => setCommunityMenuState("shown")}
-                    onFocusOut={() => setCommunityMenuState("hidden")}
+                    onFocus={() => setCommunityMenuVisible(true)}
+                    onFocusOut={() => setCommunityMenuVisible(false)}
                     style={{ width: "100%" }}
                 />
                 <ContextMenu
                     items={items}
-                    state={communityMenuState}
-                    setState={setCommunityMenuState}
+                    visible={communityMenuVisible}
+                    setVisible={setCommunityMenuVisible}
                     style={{ width: "calc(100% - 32px)" }}
                 />
             </div>
@@ -86,7 +87,7 @@ const CreatePost: FC<Props> = ({ state, setState }) => {
                     text="Cancel"
                     type="button"
                     style="secondary"
-                    onClick={() => setState("hidden")}
+                    onClick={() => setVisible(false)}
                 />
                 <Button text="Create Post" type="submit" style="primary" />
             </div>

@@ -12,15 +12,11 @@ const TopNav: FC = () => {
         "h-10 w-10 p-1 rounded-md hover:bg-gray-200 duration-100";
     const iconSize: number = 32;
 
-    type state = "hidden" | "shown";
-    const [createPostState, setCreatePostState] = useState<state>("hidden");
-    const [createCommunityState, setCreateCommunityState] =
-        useState<state>("hidden");
-    const [createContextMenuState, setCreateContextMenuState] =
-        useState<state>("hidden");
-    const [userContextMenuState, setUserContextMenuState] =
-        useState<state>("hidden");
-    const [loginState, setLoginState] = useState<state>("hidden");
+    const [createPostState, setCreatePostState] = useState(false);
+    const [createCommunityState, setCreateCommunityState] = useState(false);
+    const [createContextMenuState, setCreateContextMenuState] = useState(false);
+    const [userContextMenuState, setUserContextMenuState] = useState(false);
+    const [loginState, setLoginState] = useState(false);
 
     const loggedIn = false;
 
@@ -71,10 +67,10 @@ const TopNav: FC = () => {
                     <div
                         className="p-1 rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300 duration-100"
                         onClick={() => {
-                            if (createCommunityState == "shown") {
-                                setCreateCommunityState("hidden");
+                            if (createCommunityState == true) {
+                                setCreateCommunityState(false);
                             }
-                            setCreatePostState("shown");
+                            setCreatePostState(true);
                         }}
                     >
                         <Image
@@ -87,9 +83,9 @@ const TopNav: FC = () => {
                     <div
                         className="p-1 rounded-r-md hover:bg-gray-200 duration-100"
                         onClick={() => {
-                            createContextMenuState == "hidden"
-                                ? setCreateContextMenuState("shown")
-                                : setCreateContextMenuState("hidden");
+                            createContextMenuState == false
+                                ? setCreateContextMenuState(true)
+                                : setCreateContextMenuState(false);
                         }}
                     >
                         <Image
@@ -105,25 +101,25 @@ const TopNav: FC = () => {
                                 text: "New Post",
                                 icon: "test",
                                 onClick: () => {
-                                    if (createCommunityState == "shown") {
-                                        setCreateCommunityState("hidden");
+                                    if (createCommunityState == true) {
+                                        setCreateCommunityState(false);
                                     }
-                                    setCreatePostState("shown");
+                                    setCreatePostState(true);
                                 },
                             },
                             {
                                 text: "New Community",
                                 icon: "test",
                                 onClick: () => {
-                                    if (createPostState == "shown") {
-                                        setCreatePostState("hidden");
+                                    if (createPostState == true) {
+                                        setCreatePostState(false);
                                     }
-                                    setCreateCommunityState("shown");
+                                    setCreateCommunityState(true);
                                 },
                             },
                         ]}
-                        state={createContextMenuState}
-                        setState={setCreateContextMenuState}
+                        visible={createContextMenuState}
+                        setVisible={setCreateContextMenuState}
                     />
                 </div>
 
@@ -132,10 +128,10 @@ const TopNav: FC = () => {
                     onClick={
                         loggedIn
                             ? () =>
-                                  userContextMenuState == "hidden"
-                                      ? setUserContextMenuState("shown")
-                                      : setUserContextMenuState("hidden")
-                            : () => setLoginState("shown")
+                                  userContextMenuState == false
+                                      ? setUserContextMenuState(true)
+                                      : setUserContextMenuState(false)
+                            : () => setLoginState(true)
                     }
                 >
                     <div className="flex h-10 p-1 gap-1 rounded-md hover:bg-gray-200 cursor-pointer duration-100">
@@ -164,17 +160,20 @@ const TopNav: FC = () => {
                                 onClick: () => console.log("Logout"),
                             },
                         ]}
-                        state={userContextMenuState}
-                        setState={setUserContextMenuState}
+                        visible={userContextMenuState}
+                        setVisible={setUserContextMenuState}
                     />
                 </button>
             </nav>
-            <CreatePost state={createPostState} setState={setCreatePostState} />
-            <CreateCommunity
-                state={createCommunityState}
-                setState={setCreateCommunityState}
+            <CreatePost
+                visible={createPostState}
+                setVisible={setCreatePostState}
             />
-            <Login state={loginState} setState={setLoginState} />
+            <CreateCommunity
+                visible={createCommunityState}
+                setVisible={setCreateCommunityState}
+            />
+            <Login visible={loginState} setVisible={setLoginState} />
         </>
     );
 };

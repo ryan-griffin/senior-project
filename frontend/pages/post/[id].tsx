@@ -2,7 +2,9 @@ import { NextPage } from "next";
 import Post from "../../components/Post";
 
 export async function getServerSideProps(context: any) {
-    const res = await fetch(`http://localhost:8080/post/${context.params.id}`);
+    const res = await fetch(
+        `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/post/${context.params.id}`
+    );
     const post = await res.json();
     return { props: { post } };
 }

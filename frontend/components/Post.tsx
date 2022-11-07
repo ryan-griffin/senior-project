@@ -14,9 +14,12 @@ interface Props {
 const Post: FC<Props> = ({ post }) => {
     const router = useRouter();
     async function deletePost() {
-        await fetch(`http://localhost:8080/delete-post/${post.id}`, {
-            method: "DELETE",
-        });
+        await fetch(
+            `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/delete-post/${post.id}`,
+            {
+                method: "DELETE",
+            }
+        );
         router.pathname == "/"
             ? router.replace(router.asPath)
             : router.push("/");

@@ -5,22 +5,25 @@ import SegmentedControl from "./SegmentedControl";
 import { useState } from "react";
 
 interface Props {
-    state: "hidden" | "shown";
-    setState: (state: "hidden" | "shown") => void;
+    visible: boolean;
+    setVisible: (state: boolean) => void;
 }
 
-const Login: FC<Props> = ({ state, setState }) => {
+const Login: FC<Props> = ({ visible, setVisible }) => {
     const [typeState, setTypeState] = useState<"login" | "signup">("login");
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const containerClass = state == "shown" ? "flex" : "hidden";
+    const containerClass = visible == true ? "flex" : "hidden";
 
     async function createUser() {
-        await fetch("http://localhost:8080/create-user", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
-        });
+        await fetch(
+            `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/create-user`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+            }
+        );
     }
 
     return (
@@ -65,7 +68,7 @@ const Login: FC<Props> = ({ state, setState }) => {
                     text="Cancel"
                     type="button"
                     style="secondary"
-                    onClick={() => setState("hidden")}
+                    onClick={() => setVisible(false)}
                 />
             </div>
         </div>
