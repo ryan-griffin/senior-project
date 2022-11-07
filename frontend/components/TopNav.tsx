@@ -12,10 +12,11 @@ const TopNav: FC = () => {
         "h-10 w-10 p-1 rounded-md hover:bg-gray-200 duration-100";
     const iconSize: number = 32;
 
-    const [createPostState, setCreatePostState] = useState(false);
-    const [createCommunityState, setCreateCommunityState] = useState(false);
-    const [createContextMenuState, setCreateContextMenuState] = useState(false);
-    const [userContextMenuState, setUserContextMenuState] = useState(false);
+    const [createPostVisible, setCreatePostVisible] = useState(false);
+    const [createCommunityVisible, setCreateCommunityVisible] = useState(false);
+    const [createContextMenuVisible, setCreateContextMenuVisible] =
+        useState(false);
+    const [userContextMenuVisible, setUserContextMenuState] = useState(false);
     const [loginState, setLoginState] = useState(false);
 
     const loggedIn = false;
@@ -67,10 +68,10 @@ const TopNav: FC = () => {
                     <div
                         className="p-1 rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300 duration-100"
                         onClick={() => {
-                            if (createCommunityState == true) {
-                                setCreateCommunityState(false);
+                            if (createCommunityVisible == true) {
+                                setCreateCommunityVisible(false);
                             }
-                            setCreatePostState(true);
+                            setCreatePostVisible(true);
                         }}
                     >
                         <Image
@@ -83,9 +84,9 @@ const TopNav: FC = () => {
                     <div
                         className="p-1 rounded-r-md hover:bg-gray-200 duration-100"
                         onClick={() => {
-                            createContextMenuState == false
-                                ? setCreateContextMenuState(true)
-                                : setCreateContextMenuState(false);
+                            createContextMenuVisible == false
+                                ? setCreateContextMenuVisible(true)
+                                : setCreateContextMenuVisible(false);
                         }}
                     >
                         <Image
@@ -101,25 +102,25 @@ const TopNav: FC = () => {
                                 text: "New Post",
                                 icon: "test",
                                 onClick: () => {
-                                    if (createCommunityState == true) {
-                                        setCreateCommunityState(false);
+                                    if (createCommunityVisible == true) {
+                                        setCreateCommunityVisible(false);
                                     }
-                                    setCreatePostState(true);
+                                    setCreatePostVisible(true);
                                 },
                             },
                             {
                                 text: "New Community",
                                 icon: "test",
                                 onClick: () => {
-                                    if (createPostState == true) {
-                                        setCreatePostState(false);
+                                    if (createPostVisible == true) {
+                                        setCreatePostVisible(false);
                                     }
-                                    setCreateCommunityState(true);
+                                    setCreateCommunityVisible(true);
                                 },
                             },
                         ]}
-                        visible={createContextMenuState}
-                        setVisible={setCreateContextMenuState}
+                        visible={createContextMenuVisible}
+                        setVisible={setCreateContextMenuVisible}
                     />
                 </div>
 
@@ -128,7 +129,7 @@ const TopNav: FC = () => {
                     onClick={
                         loggedIn
                             ? () =>
-                                  userContextMenuState == false
+                                  userContextMenuVisible == false
                                       ? setUserContextMenuState(true)
                                       : setUserContextMenuState(false)
                             : () => setLoginState(true)
@@ -160,18 +161,18 @@ const TopNav: FC = () => {
                                 onClick: () => console.log("Logout"),
                             },
                         ]}
-                        visible={userContextMenuState}
+                        visible={userContextMenuVisible}
                         setVisible={setUserContextMenuState}
                     />
                 </button>
             </nav>
             <CreatePost
-                visible={createPostState}
-                setVisible={setCreatePostState}
+                visible={createPostVisible}
+                setVisible={setCreatePostVisible}
             />
             <CreateCommunity
-                visible={createCommunityState}
-                setVisible={setCreateCommunityState}
+                visible={createCommunityVisible}
+                setVisible={setCreateCommunityVisible}
             />
             <Login visible={loginState} setVisible={setLoginState} />
         </>
