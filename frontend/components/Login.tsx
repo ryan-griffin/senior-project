@@ -11,8 +11,8 @@ interface Props {
 
 const Login: FC<Props> = ({ visible, setVisible }) => {
     const [typeState, setTypeState] = useState<"login" | "signup">("login");
-    const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const containerClass = visible == true ? "flex" : "hidden";
 
     async function createUser() {
@@ -24,6 +24,9 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
                 body: JSON.stringify({ username, password }),
             }
         );
+        setUsername("");
+        setPassword("");
+        setVisible(false);
     }
 
     return (

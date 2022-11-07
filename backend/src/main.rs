@@ -1,4 +1,5 @@
 mod actions;
+mod auth;
 mod models;
 mod schema;
 
@@ -34,11 +35,12 @@ async fn fetch_get_user(
     Ok(HttpResponse::Ok().json(user))
 }
 
-#[get("/create-user")]
+#[post("/create-user")]
 async fn fetch_create_user(
     pool: web::Data<DbPool>,
-    user: web::Json<NewUser>,
+    mut user: web::Json<NewUser>,
 ) -> Result<HttpResponse, Error> {
+    user.password = auth::hash_password(&user.password);
     let user = web::block(move || {
         let mut conn = pool.get().unwrap();
         create::user(&mut conn, &user.into_inner())
