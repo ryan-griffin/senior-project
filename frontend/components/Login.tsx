@@ -33,7 +33,13 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
         <div
             className={`fixed top-0 left-0 z-20 h-screen w-screen bg-black/50 p-4 justify-center items-center ${containerClass}`}
         >
-            <div className="flex flex-col p-4 gap-4 bg-white rounded-lg shadow-md w-[344px] animate-grow">
+            <form
+                className="flex flex-col p-4 gap-4 bg-white rounded-lg shadow-md w-[344px] animate-grow"
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    typeState == "login" ? console.log("login") : createUser();
+                }}
+            >
                 <h1 className="text-2xl font-bold text-center">
                     {typeState == "login" ? "Login" : "Sign Up"}
                 </h1>
@@ -59,13 +65,8 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
                 />
                 <Button
                     text={typeState == "login" ? "Login" : "Sign Up"}
-                    type="button"
+                    type="submit"
                     style="primary"
-                    onClick={
-                        typeState == "login"
-                            ? () => console.log("Login")
-                            : createUser
-                    }
                 />
                 <Button
                     text="Cancel"
@@ -73,7 +74,7 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
                     style="secondary"
                     onClick={() => setVisible(false)}
                 />
-            </div>
+            </form>
         </div>
     );
 };
