@@ -1,11 +1,11 @@
 mod actions;
-mod auth;
 mod models;
 mod schema;
 
 use actions::*;
 use actix_cors::Cors;
 use actix_web::{delete, get, middleware, post, web, App, Error, HttpResponse, HttpServer};
+use bcrypt::{hash, DEFAULT_COST};
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};
 use models::*;
@@ -40,7 +40,8 @@ async fn fetch_create_user(
     pool: web::Data<DbPool>,
     mut user: web::Json<NewUser>,
 ) -> Result<HttpResponse, Error> {
-    user.password = auth::hash_password(&user.password);
+    user.password = hash(&user.password, DEFAULT_COST).expect("Error hashing password");
+    println!("{}", user.password);
     let user = web::block(move || {
         let mut conn = pool.get().unwrap();
         create::user(&mut conn, &user.into_inner())
