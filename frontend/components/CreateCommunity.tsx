@@ -52,7 +52,11 @@ const CreateCommunity: FC<Props> = ({ visible, setVisible }) => {
                     style="secondary"
                     onClick={() => setVisible(false)}
                 />
-                <Button text="Create Community" type="submit" style="primary" />
+                <Button
+                    text="Create a Community"
+                    type="submit"
+                    style="primary"
+                />
             </div>
         </form>
     );

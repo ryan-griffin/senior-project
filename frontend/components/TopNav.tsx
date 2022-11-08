@@ -99,7 +99,7 @@ const TopNav: FC = () => {
                     <ContextMenu
                         items={[
                             {
-                                text: "New Post",
+                                text: "Create a Post",
                                 icon: "test",
                                 onClick: () => {
                                     if (createCommunityVisible == true) {
@@ -109,7 +109,7 @@ const TopNav: FC = () => {
                                 },
                             },
                             {
-                                text: "New Community",
+                                text: "Create a Community",
                                 icon: "test",
                                 onClick: () => {
                                     if (createPostVisible == true) {

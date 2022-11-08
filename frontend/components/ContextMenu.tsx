@@ -8,23 +8,10 @@ interface Props {
 }
 
 const ContextMenu: FC<Props> = ({ items, visible, setVisible, style }) => {
-    const menuItems = items.map((item, key) => (
-        <div
-            className="p-2 rounded-md hover:bg-gray-200 duration-100 cursor-pointer"
-            key={key}
-            onClick={() => {
-                item.onClick();
-                setVisible(false);
-            }}
-        >
-            {item.text}
-        </div>
-    ));
-
     let height = 8;
     let duration = 10;
     items.forEach(() => {
-        height += 40;
+        height += 44;
         duration += 50;
     });
 
@@ -37,7 +24,20 @@ const ContextMenu: FC<Props> = ({ items, visible, setVisible, style }) => {
                 ...style,
             }}
         >
-            <div className="m-1 gap-1">{menuItems}</div>
+            <div className="flex flex-col m-1 gap-1">
+                {items.map((item, key) => (
+                    <button
+                        className="p-2 rounded-md hover:bg-gray-200 duration-100 cursor-pointer text-left"
+                        key={key}
+                        onClick={() => {
+                            item.onClick();
+                            setVisible(false);
+                        }}
+                    >
+                        {item.text}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };

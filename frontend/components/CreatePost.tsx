@@ -59,7 +59,7 @@ const CreatePost: FC<Props> = ({ visible, setVisible }) => {
             className={`flex flex-col w-[650px] p-4 gap-4 fixed z-0 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-md  duration-[250ms] ${stateClass}`}
             onSubmit={createPost}
         >
-            <h1 className="text-xl font-semibold">Create Post</h1>
+            <h1 className="text-xl font-semibold">Create a Post</h1>
             <div>
                 <Input
                     placeholder="Community"
