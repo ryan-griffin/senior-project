@@ -33,7 +33,7 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
         <div
             className={`fixed top-0 left-0 z-20 h-screen w-screen bg-black/50 p-4 justify-center items-center ${containerClass}`}
         >
-            <div className="flex flex-col p-4 gap-4 bg-white rounded-lg shadow-md w-[344px]">
+            <div className="flex flex-col p-4 gap-4 bg-white rounded-lg shadow-md w-[344px] animate-grow">
                 <h1 className="text-2xl font-bold text-center">
                     {typeState == "login" ? "Login" : "Sign Up"}
                 </h1>
@@ -64,7 +64,7 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
                     onClick={
                         typeState == "login"
                             ? () => console.log("Login")
-                            : () => createUser()
+                            : createUser
                     }
                 />
                 <Button
