@@ -25,12 +25,10 @@ pub mod get {
     // Get all posts in a specific community.
     pub fn posts_by_community(
         conn: &mut MysqlConnection,
-        community_name: &str,
+        community_str: &str,
     ) -> Result<Vec<Post>, Error> {
         use crate::schema::posts::dsl::*;
-        posts
-            .filter(community.eq(community_name))
-            .load::<Post>(conn)
+        posts.filter(community.eq(community_str)).load::<Post>(conn)
     }
 
     // Get a post by its unique id.
@@ -46,9 +44,9 @@ pub mod get {
     }
 
     // Get a community by its unique name.
-    pub fn community(conn: &mut MysqlConnection, community_name: &str) -> Result<Community, Error> {
+    pub fn community(conn: &mut MysqlConnection, community_str: &str) -> Result<Community, Error> {
         use crate::schema::communities::dsl::*;
-        communities.filter(name.eq(community_name)).first(conn)
+        communities.filter(name.eq(community_str)).first(conn)
     }
 }
 
@@ -62,26 +60,26 @@ pub mod create {
     pub fn user(conn: &mut MysqlConnection, user: &NewUser) -> Result<User, Error> {
         use crate::schema::users;
 
-        diesel::insert_into(users::table)
-            .values(user)
-            .execute(conn)
-            .expect("Error creating new user");
+        let insert_result = diesel::insert_into(users::table).values(user).execute(conn);
 
-        users::table
-            .filter(users::username.eq(&user.username))
-            .first(conn)
+        match insert_result {
+            Ok(_) => users::table
+                .filter(users::username.eq(&user.username))
+                .first(conn),
+            Err(err) => Err(err),
+        }
     }
 
     // Create a new post.
     pub fn post(conn: &mut MysqlConnection, post: &NewPost) -> Result<Post, Error> {
         use crate::schema::posts;
 
-        diesel::insert_into(posts::table)
-            .values(post)
-            .execute(conn)
-            .expect("Error creating new post");
+        let insert_result = diesel::insert_into(posts::table).values(post).execute(conn);
 
-        posts::table.order(posts::id.desc()).first(conn)
+        match insert_result {
+            Ok(_) => posts::table.order(posts::id.desc()).first(conn),
+            Err(err) => Err(err),
+        }
     }
 
     // Create a new community.
@@ -91,14 +89,16 @@ pub mod create {
     ) -> Result<Community, Error> {
         use crate::schema::communities;
 
-        diesel::insert_into(communities::table)
+        let insert_result = diesel::insert_into(communities::table)
             .values(community)
-            .execute(conn)
-            .expect("Error creating new community");
+            .execute(conn);
 
-        communities::table
-            .filter(communities::name.eq(&community.name))
-            .first(conn)
+        match insert_result {
+            Ok(_) => communities::table
+                .filter(communities::name.eq(&community.name))
+                .first(conn),
+            Err(err) => Err(err),
+        }
     }
 }
 
