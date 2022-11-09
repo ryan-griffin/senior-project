@@ -85,13 +85,24 @@ async fn fetch_get_user(
 #[post("/create-user")]
 async fn fetch_create_user(
     pool: web::Data<DbPool>,
-    mut user: web::Json<NewUser>,
+    user: web::Json<NewUser>,
 ) -> Result<HttpResponse, Error> {
+    let mut user = user.into_inner();
+
+    if user.username.is_empty()
+        || user.username.contains(char::is_whitespace)
+        || user.password.len() < 8
+        || user.password.contains(char::is_whitespace)
+    {
+        return Ok(HttpResponse::BadRequest().finish());
+    }
+
     user.password = hash(&user.password, DEFAULT_COST).unwrap();
+
     let db_result = web::block(move || {
         let conn = pool.get();
         match conn {
-            Ok(mut conn) => match create::user(&mut conn, &user.into_inner()) {
+            Ok(mut conn) => match create::user(&mut conn, &user) {
                 Ok(user) => Ok(user),
                 Err(err) => Err(err.to_string()),
             },
@@ -99,6 +110,7 @@ async fn fetch_create_user(
         }
     })
     .await?;
+
     match db_result {
         Ok(user) => Ok(HttpResponse::Ok().json(user)),
         Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
@@ -258,10 +270,18 @@ async fn fetch_create_community(
     pool: web::Data<DbPool>,
     community: web::Json<NewCommunity>,
 ) -> Result<HttpResponse, Error> {
+    let community = community.into_inner();
+
+    if community.name.contains(char::is_whitespace)
+        || community.description.contains(char::is_whitespace)
+    {
+        return Ok(HttpResponse::BadRequest().finish());
+    }
+
     let db_result = web::block(move || {
         let conn = pool.get();
         match conn {
-            Ok(mut conn) => match create::community(&mut conn, &community.into_inner()) {
+            Ok(mut conn) => match create::community(&mut conn, &community) {
                 Ok(community) => Ok(community),
                 Err(err) => Err(err.to_string()),
             },
