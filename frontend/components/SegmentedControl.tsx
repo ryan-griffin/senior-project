@@ -23,7 +23,9 @@ const SegmentedControl: FC<Props> = ({ options }) => {
             {options.map((option, index) => (
                 <button
                     key={index}
-                    className="w-full rounded-md relative h-8 flex duration-100 hover:bg-gray-300"
+                    className={`w-full rounded-md relative h-8 flex duration-100 ${
+                        activeTab != index ? "hover:bg-gray-300" : ""
+                    }`}
                     onClick={() => {
                         setActiveTab(index);
                         option.action();
