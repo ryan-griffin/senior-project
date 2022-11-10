@@ -154,6 +154,14 @@ async fn fetch_create_post(
     pool: web::Data<DbPool>,
     post: web::Json<NewPost>,
 ) -> Result<HttpResponse, Error> {
+    if post.community.is_empty()
+        || post.community.contains(char::is_whitespace)
+        || post.title.is_empty()
+        || post.body.is_empty()
+    {
+        return Ok(HttpResponse::BadRequest().finish());
+    }
+
     let db_result = web::block(move || {
         pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
             create::post(&mut conn, &post.into_inner()).map_err(|e| e.to_string())
@@ -222,17 +230,18 @@ async fn fetch_create_community(
     pool: web::Data<DbPool>,
     community: web::Json<NewCommunity>,
 ) -> Result<HttpResponse, Error> {
-    let community = community.into_inner();
-
-    if community.name.contains(char::is_whitespace)
-        || community.description.contains(char::is_whitespace)
+    if community.name.is_empty()
+        || community.name.contains(char::is_whitespace)
+        || community.user.is_empty()
+        || community.user.contains(char::is_whitespace)
+        || community.description.is_empty()
     {
         return Ok(HttpResponse::BadRequest().finish());
     }
 
     let db_result = web::block(move || {
         pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
-            create::community(&mut conn, &community).map_err(|e| e.to_string())
+            create::community(&mut conn, &community.into_inner()).map_err(|e| e.to_string())
         })
     })
     .await?;
