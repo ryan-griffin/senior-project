@@ -2,22 +2,30 @@ import { FC } from "react";
 import { useState } from "react";
 
 interface Props {
+    defaultState: boolean;
     onAction: () => void;
     offAction: () => void;
 }
 
-const Switch: FC<Props> = ({ onAction, offAction }) => {
-    const stateClass = on ? "bg-blue-500" : "bg-gray-300";
+const Switch: FC<Props> = ({ defaultState, onAction, offAction }) => {
+    const [on, toggle] = useState(defaultState);
 
     return (
-        <div
-            className={`w-14 h-8 bg-gray-200 rounded-full p-1 duration-200 cursor-pointer ${stateClass}`}
-            onClick={}
+        <button
+            className={`w-12 h-6 p-1 rounded-full duration-200 [&>*]:hover:scale-110 ${
+                on ? "bg-blue-500" : "bg-gray-200"
+            }`}
+            onClick={() => {
+                on ? offAction() : onAction();
+                toggle(!on);
+            }}
         >
             <div
-                className={`h-full aspect-square bg-white shadow-sm rounded-full duration-200 ${offset}`}
+                className={`h-full aspect-square bg-white shadow-sm rounded-full duration-200 ${
+                    on ? "translate-x-6" : "translate-x-0"
+                }`}
             ></div>
-        </div>
+        </button>
     );
 };
 
