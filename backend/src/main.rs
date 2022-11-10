@@ -17,14 +17,9 @@ async fn login(pool: web::Data<DbPool>, user: web::Json<NewUser>) -> Result<Http
     let user = user.into_inner();
 
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match get::user(&mut conn, &user.username) {
-                Ok(db_user) => Ok(db_user),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get()
+            .map_err(|e| e.to_string())
+            .and_then(|mut conn| get::user(&mut conn, &user.username).map_err(|e| e.to_string()))
     })
     .await?;
 
@@ -44,19 +39,15 @@ async fn login(pool: web::Data<DbPool>, user: web::Json<NewUser>) -> Result<Http
 #[get("/users")]
 async fn fetch_get_users(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match get::users(&mut conn) {
-                Ok(users) => Ok(users),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get()
+            .map_err(|e| e.to_string())
+            .and_then(|mut conn| get::users(&mut conn).map_err(|e| e.to_string()))
     })
     .await?;
+
     match db_result {
         Ok(users) => Ok(HttpResponse::Ok().json(users)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
@@ -66,19 +57,15 @@ async fn fetch_get_user(
     username: web::Path<String>,
 ) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match get::user(&mut conn, &username.into_inner()) {
-                Ok(user) => Ok(user),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+            get::user(&mut conn, &username.into_inner()).map_err(|e| e.to_string())
+        })
     })
     .await?;
+
     match db_result {
         Ok(user) => Ok(HttpResponse::Ok().json(user)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
@@ -100,39 +87,29 @@ async fn fetch_create_user(
     user.password = hash(&user.password, DEFAULT_COST).unwrap();
 
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match create::user(&mut conn, &user) {
-                Ok(user) => Ok(user),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get()
+            .map_err(|e| e.to_string())
+            .and_then(|mut conn| create::user(&mut conn, &user).map_err(|e| e.to_string()))
     })
     .await?;
 
     match db_result {
         Ok(user) => Ok(HttpResponse::Ok().json(user)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
 #[get("/posts")]
 async fn fetch_get_posts(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match get::posts(&mut conn) {
-                Ok(posts) => Ok(posts),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get()
+            .map_err(|e| e.to_string())
+            .and_then(|mut conn| get::posts(&mut conn).map_err(|e| e.to_string()))
     })
     .await?;
     match db_result {
         Ok(posts) => Ok(HttpResponse::Ok().json(posts)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
@@ -142,19 +119,15 @@ async fn fetch_get_posts_by_community(
     community: web::Path<String>,
 ) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match get::posts_by_community(&mut conn, &community.into_inner()) {
-                Ok(posts) => Ok(posts),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+            get::posts_by_community(&mut conn, &community.into_inner()).map_err(|e| e.to_string())
+        })
     })
     .await?;
+
     match db_result {
         Ok(posts) => Ok(HttpResponse::Ok().json(posts)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
@@ -164,19 +137,15 @@ async fn fetch_get_post(
     id: web::Path<i32>,
 ) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match get::post(&mut conn, id.into_inner()) {
-                Ok(post) => Ok(post),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get()
+            .map_err(|e| e.to_string())
+            .and_then(|mut conn| get::post(&mut conn, id.into_inner()).map_err(|e| e.to_string()))
     })
     .await?;
+
     match db_result {
         Ok(post) => Ok(HttpResponse::Ok().json(post)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
@@ -186,19 +155,15 @@ async fn fetch_create_post(
     post: web::Json<NewPost>,
 ) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match create::post(&mut conn, &post.into_inner()) {
-                Ok(post) => Ok(post),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+            create::post(&mut conn, &post.into_inner()).map_err(|e| e.to_string())
+        })
     })
     .await?;
+
     match db_result {
         Ok(post) => Ok(HttpResponse::Ok().json(post)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
@@ -208,38 +173,29 @@ async fn fetch_delete_post(
     id: web::Path<i32>,
 ) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match delete::post(&mut conn, id.into_inner()) {
-                Ok(id) => Ok(id),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+            delete::post(&mut conn, id.into_inner()).map_err(|e| e.to_string())
+        })
     })
     .await?;
     match db_result {
         Ok(id) => Ok(HttpResponse::Ok().body(format!("Deleted post {}", id))),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
 #[get("/communities")]
 async fn fetch_get_communities(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match get::communities(&mut conn) {
-                Ok(communities) => Ok(communities),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get()
+            .map_err(|e| e.to_string())
+            .and_then(|mut conn| get::communities(&mut conn).map_err(|e| e.to_string()))
     })
     .await?;
+
     match db_result {
         Ok(communities) => Ok(HttpResponse::Ok().json(communities)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
@@ -249,19 +205,15 @@ async fn fetch_get_community(
     name: web::Path<String>,
 ) -> Result<HttpResponse, Error> {
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match get::community(&mut conn, &name.into_inner()) {
-                Ok(community) => Ok(community),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+            get::community(&mut conn, &name.into_inner()).map_err(|e| e.to_string())
+        })
     })
     .await?;
+
     match db_result {
         Ok(community) => Ok(HttpResponse::Ok().json(community)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
@@ -279,19 +231,15 @@ async fn fetch_create_community(
     }
 
     let db_result = web::block(move || {
-        let conn = pool.get();
-        match conn {
-            Ok(mut conn) => match create::community(&mut conn, &community) {
-                Ok(community) => Ok(community),
-                Err(err) => Err(err.to_string()),
-            },
-            Err(err) => Err(err.to_string()),
-        }
+        pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+            create::community(&mut conn, &community).map_err(|e| e.to_string())
+        })
     })
     .await?;
+
     match db_result {
         Ok(community) => Ok(HttpResponse::Ok().json(community)),
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
     }
 }
 
