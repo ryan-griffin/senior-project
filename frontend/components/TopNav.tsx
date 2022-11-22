@@ -143,8 +143,8 @@ const TopNav: FC = () => {
                             <Image
                                 src="/icons/user.svg"
                                 alt=""
-                                height={iconSize}
-                                width={iconSize}
+                                height={32}
+                                width={32}
                             />
                         </div>
                         <div className="m-auto">Login</div>
