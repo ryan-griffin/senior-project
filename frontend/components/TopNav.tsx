@@ -6,11 +6,12 @@ import CreatePost from "./CreatePost";
 import CreateCommunity from "./CreateCommunity";
 import ContextMenu from "./ContextMenu";
 import Login from "./Login";
+import Input from "./Input";
 
 const TopNav: FC = () => {
     const buttonClass =
-        "h-10 w-10 p-1 rounded-md hover:bg-gray-200 duration-100";
-    const iconSize: number = 32;
+        "h-10 w-10 p-[6px] rounded-md hover:bg-gray-200 duration-100";
+    const iconSize: number = 28;
 
     const [createPostVisible, setCreatePostVisible] = useState(false);
     const [createCommunityVisible, setCreateCommunityVisible] = useState(false);
@@ -58,15 +59,17 @@ const TopNav: FC = () => {
                     />
                 </Link>
 
-                <input
-                    className="bg-gray-200 rounded-md outline-none p-1 w-[500px] focus:bg-gray-300"
-                    type="text"
+                <Input
                     placeholder="Search"
+                    value=""
+                    onChange={() => console.log("search")}
+                    icon="bg-[url('/icons/search.svg')]"
+                    style="w-[500px]"
                 />
 
                 <div className="flex h-10 cursor-pointer">
                     <div
-                        className="p-1 rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300 duration-100"
+                        className="p-[6px] rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300 duration-100"
                         onClick={() => {
                             if (createCommunityVisible == true) {
                                 setCreateCommunityVisible(false);
@@ -82,7 +85,7 @@ const TopNav: FC = () => {
                         />
                     </div>
                     <div
-                        className="p-1 rounded-r-md hover:bg-gray-200 duration-100"
+                        className="p-[6px] rounded-r-md hover:bg-gray-200 duration-100"
                         onClick={() => {
                             createContextMenuVisible == false
                                 ? setCreateContextMenuVisible(true)

@@ -67,7 +67,7 @@ const CreatePost: FC<Props> = ({ visible, setVisible }) => {
                     onChange={setCommunity}
                     onFocus={() => setCommunityMenuVisible(true)}
                     onFocusOut={() => setCommunityMenuVisible(false)}
-                    style={{ width: "100%" }}
+                    style="w-full"
                 />
                 <ContextMenu
                     items={items}

@@ -7,7 +7,8 @@ interface InputProps {
     onChange: (event: string) => void;
     onFocus?: () => void;
     onFocusOut?: () => void;
-    style?: React.CSSProperties;
+    icon?: string;
+    style?: string;
 }
 
 const Input: FC<InputProps> = ({
@@ -17,11 +18,13 @@ const Input: FC<InputProps> = ({
     onChange,
     onFocus,
     onFocusOut,
+    icon,
     style,
 }) => (
     <input
-        className="bg-gray-200 rounded-md outline-none p-2 duration-100 focus:bg-gray-300"
-        style={style}
+        className={`bg-gray-200 rounded-md outline-none p-2 duration-100 focus:bg-gray-300 placeholder:text-gray-400 ${style} ${
+            icon ? `${icon} pl-10 bg-no-repeat bg-[left_6px_center]` : ""
+        } `}
         minLength={1}
         placeholder={placeholder}
         value={value}
