@@ -15,24 +15,30 @@ type DbPool = Pool<ConnectionManager<MysqlConnection>>;
 #[post("/login")]
 async fn login(pool: web::Data<DbPool>, user: web::Json<NewUser>) -> Result<HttpResponse, Error> {
     let user = user.into_inner();
+    if user.username.is_empty()
+        || user.username.contains(char::is_whitespace)
+        || user.password.len() < 8
+        || user.password.contains(char::is_whitespace)
+    {
+        Ok(HttpResponse::BadRequest().finish())
+    } else {
+        let db_result = web::block(move || {
+            pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+                get::user(&mut conn, &user.username).map_err(|e| e.to_string())
+            })
+        })
+        .await?;
 
-    let db_result = web::block(move || {
-        pool.get()
-            .map_err(|e| e.to_string())
-            .and_then(|mut conn| get::user(&mut conn, &user.username).map_err(|e| e.to_string()))
-    })
-    .await?;
-
-    match db_result {
-        Ok(db_user) => {
-            let is_valid = verify(&user.password, &db_user.password).unwrap();
-            if is_valid {
-                Ok(HttpResponse::Ok().json(db_user))
-            } else {
-                Ok(HttpResponse::Unauthorized().finish())
+        match db_result {
+            Ok(db_user) => {
+                if verify(&user.password, &db_user.password).unwrap() {
+                    Ok(HttpResponse::Ok().json(db_user))
+                } else {
+                    Ok(HttpResponse::Unauthorized().finish())
+                }
             }
+            Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
         }
-        Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
     }
 }
 
@@ -69,7 +75,7 @@ async fn fetch_get_user(
     }
 }
 
-#[post("/create-user")]
+#[post("/sign-up")]
 async fn fetch_create_user(
     pool: web::Data<DbPool>,
     user: web::Json<NewUser>,

@@ -10,20 +10,18 @@ interface Props {
 }
 
 const Login: FC<Props> = ({ visible, setVisible }) => {
-    const [typeState, setTypeState] = useState<"login" | "signup">("login");
+    const [type, setType] = useState<"login" | "sign-up">("login");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const containerClass = visible == true ? "flex" : "hidden";
 
-    async function createUser() {
-        await fetch(
-            `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/create-user`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
-            }
-        );
+    async function auth(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        await fetch(`http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/${type}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+        });
         setUsername("");
         setPassword("");
         setVisible(false);
@@ -35,20 +33,17 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
         >
             <form
                 className="flex flex-col p-4 gap-4 bg-white rounded-lg shadow-md w-[344px] animate-grow"
-                onSubmit={(event) => {
-                    event.preventDefault();
-                    typeState == "login" ? console.log("login") : createUser();
-                }}
+                onSubmit={auth}
             >
                 <h1 className="text-2xl font-bold text-center">
-                    {typeState == "login" ? "Login" : "Sign Up"}
+                    {type == "login" ? "Login" : "Sign Up"}
                 </h1>
                 <SegmentedControl
                     options={[
-                        { text: "Login", action: () => setTypeState("login") },
+                        { text: "Login", action: () => setType("login") },
                         {
                             text: "Sign Up",
-                            action: () => setTypeState("signup"),
+                            action: () => setType("sign-up"),
                         },
                     ]}
                 />
@@ -64,7 +59,7 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
                     onChange={setPassword}
                 />
                 <Button
-                    text={typeState == "login" ? "Login" : "Sign Up"}
+                    text={type == "login" ? "Login" : "Sign Up"}
                     type="submit"
                     style="primary"
                 />

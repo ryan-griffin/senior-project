@@ -17,7 +17,7 @@ const CreateCommunity: FC<Props> = ({ visible, setVisible }) => {
     const stateClass =
         visible == false ? "-translate-y-[calc(100%+3.5rem)]" : "translate-y-2";
 
-    async function createCommunity(event: any) {
+    async function createCommunity(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         await fetch(
             `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/create-community`,

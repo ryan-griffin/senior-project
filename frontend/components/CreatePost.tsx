@@ -36,7 +36,7 @@ const CreatePost: FC<Props> = ({ visible, setVisible }) => {
         );
     }
 
-    async function createPost(event: any) {
+    async function createPost(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const res = await fetch(
             `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/create-post`,
