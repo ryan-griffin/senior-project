@@ -1,14 +1,9 @@
+**/.env
+
 # backend
 **/target
-**/.env
 
 #frontend
 **/.next/
 **/next-env.d.ts
-**/.pnp.*
-**/.yarn/*
-!**/.yarn/patches
-!**/.yarn/releases
-!**/.yarn/plugins
-!**/.yarn/sdks
-!**/.yarn/versions
+**/node_modules/
