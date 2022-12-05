@@ -8,6 +8,7 @@ use actix_web::{delete, get, middleware, post, web, App, Error, HttpResponse, Ht
 use bcrypt::{hash, verify, DEFAULT_COST};
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};
+use jsonwebtoken::{encode, EncodingKey, Header};
 use models::*;
 
 type DbPool = Pool<ConnectionManager<MysqlConnection>>;
@@ -32,12 +33,18 @@ async fn login(pool: web::Data<DbPool>, user: web::Json<NewUser>) -> Result<Http
         match db_result {
             Ok(db_user) => {
                 if verify(&user.password, &db_user.password).unwrap() {
-                    Ok(HttpResponse::Ok().json(db_user))
+                    let token = encode(
+                        &Header::default(),
+                        &db_user,
+                        &EncodingKey::from_secret("secret".as_ref()),
+                    )
+                    .unwrap();
+                    Ok(HttpResponse::Ok().json(token))
                 } else {
                     Ok(HttpResponse::Unauthorized().finish())
                 }
             }
-            Err(err) => Ok(HttpResponse::InternalServerError().body(err)),
+            Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
         }
     }
 }
@@ -99,7 +106,15 @@ async fn fetch_create_user(
         .await?;
 
         match db_result {
-            Ok(user) => Ok(HttpResponse::Ok().json(user)),
+            Ok(db_user) => {
+                let token = encode(
+                    &Header::default(),
+                    &db_user,
+                    &EncodingKey::from_secret("secret".as_ref()),
+                )
+                .unwrap();
+                Ok(HttpResponse::Ok().json(token))
+            }
             Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
         }
     }
