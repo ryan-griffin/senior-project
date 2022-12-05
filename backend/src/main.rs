@@ -81,21 +81,21 @@ async fn fetch_create_user(
         || user.password.len() < 8
         || user.password.contains(char::is_whitespace)
     {
-        return Ok(HttpResponse::BadRequest().finish());
-    }
+        Ok(HttpResponse::BadRequest().finish())
+    } else {
+        user.password = hash(&user.password, DEFAULT_COST).unwrap();
 
-    user.password = hash(&user.password, DEFAULT_COST).unwrap();
+        let db_result = web::block(move || {
+            pool.get()
+                .map_err(|e| e.to_string())
+                .and_then(|mut conn| create::user(&mut conn, &user).map_err(|e| e.to_string()))
+        })
+        .await?;
 
-    let db_result = web::block(move || {
-        pool.get()
-            .map_err(|e| e.to_string())
-            .and_then(|mut conn| create::user(&mut conn, &user).map_err(|e| e.to_string()))
-    })
-    .await?;
-
-    match db_result {
-        Ok(user) => Ok(HttpResponse::Ok().json(user)),
-        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
+        match db_result {
+            Ok(user) => Ok(HttpResponse::Ok().json(user)),
+            Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
+        }
     }
 }
 
@@ -159,19 +159,19 @@ async fn fetch_create_post(
         || post.title.is_empty()
         || post.body.is_empty()
     {
-        return Ok(HttpResponse::BadRequest().finish());
-    }
-
-    let db_result = web::block(move || {
-        pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
-            create::post(&mut conn, &post.into_inner()).map_err(|e| e.to_string())
+        Ok(HttpResponse::BadRequest().finish())
+    } else {
+        let db_result = web::block(move || {
+            pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+                create::post(&mut conn, &post.into_inner()).map_err(|e| e.to_string())
+            })
         })
-    })
-    .await?;
+        .await?;
 
-    match db_result {
-        Ok(post) => Ok(HttpResponse::Ok().json(post)),
-        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
+        match db_result {
+            Ok(post) => Ok(HttpResponse::Ok().json(post)),
+            Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
+        }
     }
 }
 
@@ -236,19 +236,19 @@ async fn fetch_create_community(
         || community.user.contains(char::is_whitespace)
         || community.description.is_empty()
     {
-        return Ok(HttpResponse::BadRequest().finish());
-    }
-
-    let db_result = web::block(move || {
-        pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
-            create::community(&mut conn, &community.into_inner()).map_err(|e| e.to_string())
+        Ok(HttpResponse::BadRequest().finish())
+    } else {
+        let db_result = web::block(move || {
+            pool.get().map_err(|e| e.to_string()).and_then(|mut conn| {
+                create::community(&mut conn, &community.into_inner()).map_err(|e| e.to_string())
+            })
         })
-    })
-    .await?;
+        .await?;
 
-    match db_result {
-        Ok(community) => Ok(HttpResponse::Ok().json(community)),
-        Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
+        match db_result {
+            Ok(community) => Ok(HttpResponse::Ok().json(community)),
+            Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
+        }
     }
 }
 
