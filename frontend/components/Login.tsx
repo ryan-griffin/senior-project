@@ -10,14 +10,14 @@ interface Props {
 }
 
 const Login: FC<Props> = ({ visible, setVisible }) => {
-    const [type, setType] = useState<"login" | "sign-up">("login");
+    const [mode, setMode] = useState<"login" | "sign-up">("login");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const containerClass = visible == true ? "flex" : "hidden";
 
     async function auth(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        await fetch(`http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/${type}`, {
+        await fetch(`http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/${mode}`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
@@ -37,14 +37,14 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
                 onSubmit={auth}
             >
                 <h1 className="text-2xl font-bold text-center">
-                    {type == "login" ? "Login" : "Sign Up"}
+                    {mode == "login" ? "Login" : "Sign Up"}
                 </h1>
                 <SegmentedControl
                     options={[
-                        { text: "Login", action: () => setType("login") },
+                        { text: "Login", action: () => setMode("login") },
                         {
                             text: "Sign Up",
-                            action: () => setType("sign-up"),
+                            action: () => setMode("sign-up"),
                         },
                     ]}
                 />
@@ -60,7 +60,7 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
                     onChange={setPassword}
                 />
                 <Button
-                    text={type == "login" ? "Login" : "Sign Up"}
+                    text={mode == "login" ? "Login" : "Sign Up"}
                     type="submit"
                     style="primary"
                 />
