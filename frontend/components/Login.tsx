@@ -17,15 +17,12 @@ const Login: FC<Props> = ({ visible, setVisible }) => {
 
     async function auth(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        let res = await fetch(
-            `http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/${type}`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
-            }
-        );
-        let data = await res.json();
+        await fetch(`http://${process.env.NEXT_PUBLIC_IP_ADDRESS}/${type}`, {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+        });
         setUsername("");
         setPassword("");
         setVisible(false);

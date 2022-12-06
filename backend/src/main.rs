@@ -35,7 +35,7 @@ async fn login(pool: web::Data<DbPool>, user: web::Json<NewUser>) -> Result<Http
                 if verify(&user.password, &db_user.password).unwrap() {
                     let token = encode(
                         &Header::default(),
-                        &db_user,
+                        &db_user.username,
                         &EncodingKey::from_secret("secret".as_ref()),
                     )
                     .unwrap();
@@ -109,7 +109,7 @@ async fn fetch_create_user(
             Ok(db_user) => {
                 let token = encode(
                     &Header::default(),
-                    &db_user,
+                    &db_user.username,
                     &EncodingKey::from_secret("secret".as_ref()),
                 )
                 .unwrap();
