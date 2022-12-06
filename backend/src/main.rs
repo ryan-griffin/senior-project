@@ -39,7 +39,7 @@ async fn login(pool: web::Data<DbPool>, user: web::Json<NewUser>) -> Result<Http
                         &EncodingKey::from_secret("secret".as_ref()),
                     )
                     .unwrap();
-                    Ok(HttpResponse::Ok().json(token))
+                    Ok(HttpResponse::Ok().body(token))
                 } else {
                     Ok(HttpResponse::Unauthorized().finish())
                 }
@@ -113,7 +113,7 @@ async fn fetch_create_user(
                     &EncodingKey::from_secret("secret".as_ref()),
                 )
                 .unwrap();
-                Ok(HttpResponse::Ok().json(token))
+                Ok(HttpResponse::Ok().body(token))
             }
             Err(e) => Ok(HttpResponse::InternalServerError().body(e)),
         }
