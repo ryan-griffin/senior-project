@@ -1,4 +1,5 @@
 import { FC } from "react";
+import Image from "next/image";
 
 interface Props {
     items: { text: string; icon?: string; onClick: () => void }[];
@@ -27,13 +28,22 @@ const ContextMenu: FC<Props> = ({ items, visible, setVisible, style }) => {
             <div className="flex flex-col m-1 gap-1">
                 {items.map((item, key) => (
                     <button
-                        className="p-2 rounded-md hover:bg-gray-200 duration-100 cursor-pointer text-left"
+                        className="flex p-2 gap-2 rounded-md hover:bg-gray-200 duration-100 cursor-pointer text-left"
                         key={key}
                         onClick={() => {
                             item.onClick();
                             setVisible(false);
                         }}
                     >
+                        {item.icon != undefined ? (
+                            <Image
+                                src={`/icons/${item.icon}`}
+                                width={24}
+                                height={24}
+                                alt=""
+                            />
+                        ) : null}
+
                         {item.text}
                     </button>
                 ))}

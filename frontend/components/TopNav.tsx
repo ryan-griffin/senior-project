@@ -103,7 +103,6 @@ const TopNav: FC = () => {
                         items={[
                             {
                                 text: "Create a Post",
-                                icon: "test",
                                 onClick: () => {
                                     if (createCommunityVisible == true) {
                                         setCreateCommunityVisible(false);
@@ -113,7 +112,6 @@ const TopNav: FC = () => {
                             },
                             {
                                 text: "Create a Community",
-                                icon: "test",
                                 onClick: () => {
                                     if (createPostVisible == true) {
                                         setCreatePostVisible(false);

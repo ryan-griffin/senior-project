@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { FC, useState, useEffect } from "react";
+import { FC, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import ContextMenu from "./ContextMenu";
