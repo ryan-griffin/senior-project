@@ -7,6 +7,7 @@ import CreateCommunity from "./CreateCommunity";
 import ContextMenu from "./ContextMenu";
 import Login from "./Login";
 import Input from "./Input";
+import Button from "./Button";
 
 const TopNav: FC = () => {
     const buttonClass =
@@ -124,46 +125,54 @@ const TopNav: FC = () => {
                         setVisible={setCreateContextMenuVisible}
                     />
                 </div>
-
-                <button
-                    className="flex ml-auto"
-                    onClick={
-                        loggedIn
-                            ? () =>
-                                  userContextMenuVisible == false
-                                      ? setUserContextMenuState(true)
-                                      : setUserContextMenuState(false)
-                            : () => setLoginState(true)
-                    }
-                >
-                    <div className="flex h-10 p-1 gap-1 rounded-md hover:bg-gray-200 cursor-pointer duration-100">
-                        <Image
-                            src="/icons/profile.svg"
-                            alt=""
-                            height={32}
-                            width={32}
+                {loggedIn ? (
+                    <button
+                        className="flex ml-auto"
+                        onClick={() =>
+                            setUserContextMenuState(!userContextMenuVisible)
+                        }
+                    >
+                        <div className="flex h-10 p-1 gap-1 items-center rounded-md hover:bg-gray-200 cursor-pointer duration-100">
+                            <Image
+                                src="/icons/profile.svg"
+                                alt=""
+                                height={32}
+                                width={32}
+                            />
+                            Username
+                        </div>
+                        <ContextMenu
+                            items={[
+                                {
+                                    text: "Profile",
+                                    icon: "/icons/profile.svg",
+                                    onClick: () => console.log("Profile"),
+                                },
+                                {
+                                    text: "Settings",
+                                    icon: "/icons/settings.svg",
+                                    onClick: () => console.log("Settings"),
+                                },
+                                {
+                                    text: "Logout",
+                                    icon: "/icons/logout.svg",
+                                    onClick: () => console.log("Logout"),
+                                },
+                            ]}
+                            visible={userContextMenuVisible}
+                            setVisible={setUserContextMenuState}
+                            style="right-2"
                         />
-                        <div className="m-auto">Login</div>
-                    </div>
-                    <ContextMenu
-                        items={[
-                            {
-                                text: "Profile",
-                                onClick: () => console.log("Profile"),
-                            },
-                            {
-                                text: "Settings",
-                                onClick: () => console.log("Settings"),
-                            },
-                            {
-                                text: "Logout",
-                                onClick: () => console.log("Logout"),
-                            },
-                        ]}
-                        visible={userContextMenuVisible}
-                        setVisible={setUserContextMenuState}
+                    </button>
+                ) : (
+                    <Button
+                        text="Login"
+                        type="button"
+                        style="primary"
+                        customStyle="ml-auto w-20"
+                        onClick={() => setLoginState(true)}
                     />
-                </button>
+                )}
             </nav>
             <CreatePost
                 visible={createPostVisible}

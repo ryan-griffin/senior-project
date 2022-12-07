@@ -73,7 +73,7 @@ const CreatePost: FC<Props> = ({ visible, setVisible }) => {
                     items={items}
                     visible={communityMenuVisible}
                     setVisible={setCommunityMenuVisible}
-                    style={{ width: "calc(100% - 32px)" }}
+                    style="w-[calc(100%-32px)]"
                 />
             </div>
 
@@ -84,9 +84,15 @@ const CreatePost: FC<Props> = ({ visible, setVisible }) => {
                     text="Cancel"
                     type="button"
                     style="secondary"
+                    customStyle="w-full"
                     onClick={() => setVisible(false)}
                 />
-                <Button text="Create Post" type="submit" style="primary" />
+                <Button
+                    text="Create Post"
+                    type="submit"
+                    style="primary"
+                    customStyle="w-full"
+                />
             </div>
         </form>
     );

@@ -50,12 +50,14 @@ const CreateCommunity: FC<Props> = ({ visible, setVisible }) => {
                     text="Cancel"
                     type="button"
                     style="secondary"
+                    customStyle="w-full"
                     onClick={() => setVisible(false)}
                 />
                 <Button
                     text="Create a Community"
                     type="submit"
                     style="primary"
+                    customStyle="w-full"
                 />
             </div>
         </form>

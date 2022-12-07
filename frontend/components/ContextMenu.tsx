@@ -5,7 +5,7 @@ interface Props {
     items: { text: string; icon?: string; onClick: () => void }[];
     visible: boolean;
     setVisible: (visible: boolean) => void;
-    style?: React.CSSProperties;
+    style?: string;
 }
 
 const ContextMenu: FC<Props> = ({ items, visible, setVisible, style }) => {
@@ -18,14 +18,13 @@ const ContextMenu: FC<Props> = ({ items, visible, setVisible, style }) => {
 
     return (
         <div
-            className="bg-white rounded-lg shadow-md absolute top-14 overflow-hidden"
+            className={`bg-white rounded-lg shadow-md absolute top-14 overflow-hidden ${style}`}
             style={{
                 maxHeight: visible == false ? "0px" : `${height}px`,
                 transitionDuration: `${duration}ms`,
-                ...style,
             }}
         >
-            <div className="flex flex-col m-1 gap-1">
+            <div className="flex flex-col p-1 gap-1">
                 {items.map((item, key) => (
                     <button
                         className="flex p-2 gap-2 rounded-md hover:bg-gray-200 duration-100 cursor-pointer text-left"
@@ -37,7 +36,7 @@ const ContextMenu: FC<Props> = ({ items, visible, setVisible, style }) => {
                     >
                         {item.icon != undefined ? (
                             <Image
-                                src={`/icons/${item.icon}`}
+                                src={item.icon}
                                 width={24}
                                 height={24}
                                 alt=""
