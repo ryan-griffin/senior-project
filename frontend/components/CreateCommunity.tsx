@@ -35,7 +35,7 @@ const CreateCommunity: FC<Props> = ({ visible, setVisible }) => {
 
     return (
         <form
-            className={`flex flex-col w-[650px] p-4 gap-4 fixed z-0 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-md  duration-[250ms] ${stateClass}`}
+            className={`flex flex-col w-[650px] p-4 gap-4 fixed z-10 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-md  duration-[250ms] ${stateClass}`}
             onSubmit={createCommunity}
         >
             <h1 className="text-xl font-semibold">Create a Community</h1>

@@ -25,7 +25,7 @@ const TopNav: FC = () => {
 
     return (
         <>
-            <nav className="fixed w-full z-10 h-12 border-solid border-b border-gray-300 top-0 bg-white flex p-1 gap-1">
+            <nav className="fixed w-full z-20 h-12 border-solid border-b border-gray-300 top-0 bg-white flex p-1 gap-1">
                 <div className="mr-auto bg-black">
                     <Image
                         src="/icons/logo.png"
