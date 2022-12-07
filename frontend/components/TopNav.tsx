@@ -137,14 +137,12 @@ const TopNav: FC = () => {
                     }
                 >
                     <div className="flex h-10 p-1 gap-1 rounded-md hover:bg-gray-200 cursor-pointer duration-100">
-                        <div className="rounded-full bg-black">
-                            <Image
-                                src="/icons/user.svg"
-                                alt=""
-                                height={32}
-                                width={32}
-                            />
-                        </div>
+                        <Image
+                            src="/icons/profile.svg"
+                            alt=""
+                            height={32}
+                            width={32}
+                        />
                         <div className="m-auto">Login</div>
                     </div>
                     <ContextMenu
