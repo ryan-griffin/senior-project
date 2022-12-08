@@ -23,7 +23,7 @@ const Input: FC<InputProps> = ({
 }) => (
     <input
         className={`bg-gray-200 rounded-md outline-none p-2 duration-100 focus:bg-gray-300 placeholder:text-gray-400 ${style} ${
-            icon ? `${icon} pl-10 bg-no-repeat bg-[left_6px_center]` : ""
+            icon ? `${icon} pl-10 bg-no-repeat bg-[left_6px_center]` : null
         } `}
         minLength={1}
         placeholder={placeholder}
