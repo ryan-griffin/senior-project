@@ -29,6 +29,24 @@
             "group": "build"
         },
         {
+            "label": "cargo run",
+            "command": "cargo",
+            "args": ["run"],
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "test"
+        },
+        {
+            "label": "cargo run --release",
+            "command": "cargo",
+            "args": ["run", "--release"],
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "test"
+        },
+        {
             "label": "pnpm install",
             "command": "pnpm",
             "args": ["install"],
@@ -36,6 +54,16 @@
                 "cwd": "${workspaceFolder}/frontend"
             },
             "group": "build"
+        },
+        {
+            "label": "pnpm dev",
+            "command": "pnpm",
+            "args": ["dev"],
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "group": "test",
+            "dependsOn": ["pnpm install"]
         },
         {
             "label": "pnpm build",
@@ -48,8 +76,23 @@
             "dependsOn": ["pnpm install"]
         },
         {
+            "label": "pnpm start",
+            "command": "pnpm",
+            "args": ["start"],
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "group": "test",
+            "dependsOn": ["pnpm build"]
+        },
+        {
             "label": "Dev Build",
             "dependsOn": ["diesel setup", "cargo build", "pnpm install"],
+            "group": "build"
+        },
+        {
+            "label": "Dev Run",
+            "dependsOn": ["diesel setup", "cargo run", "pnpm dev"],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -62,6 +105,11 @@
                 "cargo build --release",
                 "pnpm build"
             ],
+            "group": "build"
+        },
+        {
+            "label": "Release Run",
+            "dependsOn": ["diesel setup", "cargo run --release", "pnpm start"],
             "group": "build"
         }
     ]
