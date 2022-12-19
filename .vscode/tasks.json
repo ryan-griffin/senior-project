@@ -1,0 +1,68 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "diesel setup",
+            "command": "diesel",
+            "args": ["setup"],
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build"
+        },
+        {
+            "label": "cargo build",
+            "command": "cargo",
+            "args": ["build"],
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build"
+        },
+        {
+            "label": "cargo build --release",
+            "command": "cargo",
+            "args": ["build", "--release"],
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build"
+        },
+        {
+            "label": "pnpm install",
+            "command": "pnpm",
+            "args": ["install"],
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "group": "build"
+        },
+        {
+            "label": "pnpm build",
+            "command": "pnpm",
+            "args": ["build"],
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "group": "build",
+            "dependsOn": ["pnpm install"]
+        },
+        {
+            "label": "Dev Build",
+            "dependsOn": ["diesel setup", "cargo build", "pnpm install"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Release Build",
+            "dependsOn": [
+                "diesel setup",
+                "cargo build --release",
+                "pnpm build"
+            ],
+            "group": "build"
+        }
+    ]
+}
