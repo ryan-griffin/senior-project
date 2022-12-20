@@ -14,9 +14,6 @@ const CreateCommunity: FC<Props> = ({ visible, setVisible }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
 
-    const stateClass =
-        visible == false ? "-translate-y-[calc(100%+3.5rem)]" : "translate-y-2";
-
     async function createCommunity(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         await fetch(
@@ -35,7 +32,9 @@ const CreateCommunity: FC<Props> = ({ visible, setVisible }) => {
 
     return (
         <form
-            className={`flex flex-col w-[650px] p-4 gap-4 fixed z-10 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-md  duration-[250ms] ${stateClass}`}
+            className={`flex flex-col w-[650px] p-4 gap-4 fixed z-10 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-md  duration-[250ms] ${
+                visible ? "translate-y-2" : "-translate-y-[calc(100%+3.5rem)]"
+            }`}
             onSubmit={createCommunity}
         >
             <h1 className="text-xl font-semibold">Create a Community</h1>

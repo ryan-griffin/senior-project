@@ -34,7 +34,7 @@ const ContextMenu: FC<Props> = ({ items, visible, setVisible, style }) => {
                             setVisible(false);
                         }}
                     >
-                        {item.icon != undefined ? (
+                        {item.icon ? (
                             <Image
                                 src={item.icon}
                                 width={24}
