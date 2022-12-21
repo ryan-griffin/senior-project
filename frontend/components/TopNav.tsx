@@ -72,7 +72,7 @@ const TopNav: FC = () => {
                     <div
                         className="p-[6px] rounded-l-md hover:bg-gray-200 border-solid border-r border-gray-300 duration-100"
                         onClick={() => {
-                            if (createCommunityVisible == true) {
+                            if (createCommunityVisible) {
                                 setCreateCommunityVisible(false);
                             }
                             setCreatePostVisible(true);
@@ -87,11 +87,11 @@ const TopNav: FC = () => {
                     </div>
                     <div
                         className="p-[6px] rounded-r-md hover:bg-gray-200 duration-100"
-                        onClick={() => {
-                            createContextMenuVisible == false
-                                ? setCreateContextMenuVisible(true)
-                                : setCreateContextMenuVisible(false);
-                        }}
+                        onClick={() =>
+                            setCreateContextMenuVisible(
+                                !createContextMenuVisible
+                            )
+                        }
                     >
                         <Image
                             src="/icons/down_arrow.svg"
@@ -105,7 +105,7 @@ const TopNav: FC = () => {
                             {
                                 text: "Create a Post",
                                 onClick: () => {
-                                    if (createCommunityVisible == true) {
+                                    if (createCommunityVisible) {
                                         setCreateCommunityVisible(false);
                                     }
                                     setCreatePostVisible(true);
@@ -114,7 +114,7 @@ const TopNav: FC = () => {
                             {
                                 text: "Create a Community",
                                 onClick: () => {
-                                    if (createPostVisible == true) {
+                                    if (createPostVisible) {
                                         setCreatePostVisible(false);
                                     }
                                     setCreateCommunityVisible(true);
